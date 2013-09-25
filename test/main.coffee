@@ -30,15 +30,23 @@ describe "Stuff spanning multiple lines", ->
 describe "A normal markdown paragraph", ->
   it "should keep newlines within", ->
     sections = md.parse """
-      Intro
-      -----
-      
       I'm talking about stuff.
       
       Paragraph two is rad!
     """
     
     assert sections.first().text.match("\n\n")
+
+describe "Headers", ->
+  it "should split sections", ->
+    sections = md.parse """
+      Intro
+      -----
+      
+      Some other stuff
+    """
+    
+    assert sections.length is 2
 
 describe "Many code text sequences", ->
   it "should add text in new sections after code", ->
