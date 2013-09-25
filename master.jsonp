@@ -1,0 +1,151 @@
+window["STRd6/md:master"]({
+  "version": "0.1.0",
+  "source": {
+    "LICENSE": {
+      "path": "LICENSE",
+      "mode": "100644",
+      "content": "The MIT License (MIT)\n\nCopyright (c) 2013 Daniel X Moore\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software is furnished to do so,\nsubject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\nCONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n",
+      "type": "blob"
+    },
+    "README.md": {
+      "path": "README.md",
+      "mode": "100644",
+      "content": "md\n==\n\nGenerate documentation from from literate code files.\n",
+      "type": "blob"
+    },
+    "main.coffee.md": {
+      "path": "main.coffee.md",
+      "mode": "100644",
+      "content": "Like a Doctor\n=============\n\nDocument all of your literate code: files that end in `.md`.\n\nInspired by Docco. Designed for the browser environment.\n\nFirst we convert a string of Markdown text into an array of sections.\n\n    indent = /^([ ]{4}|\\t)/\n    blank = /^\\s*$/\n\n    parse = (source) ->\n      Section = ->\n        text: []\n        code: []\n\n      sections = [Section()]\n\n      lastSection = ->\n        sections.last()\n\n      pushCode = (code) ->\n        lastSection().code.push code\n\n      pushText = (text) ->\n        if lastSection().code.length\n          section = Section()\n          section.text.push text\n          sections.push section\n        else\n          lastSection().text.push text\n          \n      truncateEmpties = (array) ->\n        while (last = array.last())? and last is \"\"\n          array.pop()\n        \n        return array\n\n      pushEmpty = ->\n        if lastWasCode\n          pushCode(\"\")\n        else\n          lastSection().text.push \"\"\n\n      lastWasCode = false\n\n      source.split(\"\\n\").each (line) ->\n        if blank.exec(line)\n          pushEmpty()\n        else if match = indent.exec(line)\n          lastWasCode = true\n          pushCode line[match[0].length..]\n        else\n          lastWasCode = false\n          pushText line\n\n      sections.each (section) ->       \n        section.text = truncateEmpties(section.text).join(\"\\n\")\n        section.code = truncateEmpties(section.code).join(\"\\n\")\n\nThe sections can then be rendered into an html document.\n\nExport our public api.\n\n    module.exports =\n      parse: parse\n",
+      "type": "blob"
+    },
+    "test/main.coffee": {
+      "path": "test/main.coffee",
+      "mode": "100644",
+      "content": "md = require \"../main\"\n\ndescribe \"Parsing\", ->\n  it \"should return an array of sections\", ->\n    sections = md.parse \"\"\"\n      A sample text + code section\n\n          I'm the code\n    \"\"\"\n\n    assert sections.length is 1\n    assert sections.first().text is \"A sample text + code section\"\n    assert sections.first().code is \"I'm the code\"\n\ndescribe \"Stuff spanning multiple lines\", ->\n  it \"should be split by newline characters\", ->\n    sections = md.parse \"\"\"\n      1\n      2\n      3\n\n          Code1\n          Code2\n    \"\"\"\n\n    assert sections.length is 1\n    assert sections.first().text is \"1\\n2\\n3\"\n    assert sections.first().code is \"Code1\\nCode2\"\n\ndescribe \"A normal markdown paragraph\", ->\n  it \"should keep newlines within\", ->\n    sections = md.parse \"\"\"\n      Intro\n      -----\n      \n      I'm talking about stuff.\n      \n      Paragraph two is rad!\n    \"\"\"\n    \n    assert sections.first().text.match(\"\\n\\n\")\n\ndescribe \"Many code text sequences\", ->\n  it \"should add text in new sections after code\", ->\n    sections = md.parse \"\"\"\n      Some description\n\n          Code\n\n      Another description\n\n          More code\n\n      Hey\n    \"\"\"\n    \n    assert sections.length is 3\n",
+      "type": "blob"
+    },
+    "pixie.cson": {
+      "path": "pixie.cson",
+      "mode": "100644",
+      "content": "version: \"0.1.0\"\nremoteDependencies: [\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/master.js\"\n]\n",
+      "type": "blob"
+    }
+  },
+  "distribution": {
+    "main": {
+      "path": "main",
+      "content": "(function() {\n  var blank, indent, parse;\n\n  indent = /^([ ]{4}|\\t)/;\n\n  blank = /^\\s*$/;\n\n  parse = function(source) {\n    var Section, lastSection, lastWasCode, pushCode, pushEmpty, pushText, sections, truncateEmpties;\n    Section = function() {\n      return {\n        text: [],\n        code: []\n      };\n    };\n    sections = [Section()];\n    lastSection = function() {\n      return sections.last();\n    };\n    pushCode = function(code) {\n      return lastSection().code.push(code);\n    };\n    pushText = function(text) {\n      var section;\n      if (lastSection().code.length) {\n        section = Section();\n        section.text.push(text);\n        return sections.push(section);\n      } else {\n        return lastSection().text.push(text);\n      }\n    };\n    truncateEmpties = function(array) {\n      var last;\n      while (((last = array.last()) != null) && last === \"\") {\n        array.pop();\n      }\n      return array;\n    };\n    pushEmpty = function() {\n      if (lastWasCode) {\n        return pushCode(\"\");\n      } else {\n        return lastSection().text.push(\"\");\n      }\n    };\n    lastWasCode = false;\n    source.split(\"\\n\").each(function(line) {\n      var match;\n      if (blank.exec(line)) {\n        return pushEmpty();\n      } else if (match = indent.exec(line)) {\n        lastWasCode = true;\n        return pushCode(line.slice(match[0].length));\n      } else {\n        lastWasCode = false;\n        return pushText(line);\n      }\n    });\n    return sections.each(function(section) {\n      section.text = truncateEmpties(section.text).join(\"\\n\");\n      return section.code = truncateEmpties(section.code).join(\"\\n\");\n    });\n  };\n\n  module.exports = {\n    parse: parse\n  };\n\n}).call(this);\n",
+      "type": "blob"
+    },
+    "test/main": {
+      "path": "test/main",
+      "content": "(function() {\n  var md;\n\n  md = require(\"../main\");\n\n  describe(\"Parsing\", function() {\n    return it(\"should return an array of sections\", function() {\n      var sections;\n      sections = md.parse(\"A sample text + code section\\n\\n    I'm the code\");\n      assert(sections.length === 1);\n      assert(sections.first().text === \"A sample text + code section\");\n      return assert(sections.first().code === \"I'm the code\");\n    });\n  });\n\n  describe(\"Stuff spanning multiple lines\", function() {\n    return it(\"should be split by newline characters\", function() {\n      var sections;\n      sections = md.parse(\"1\\n2\\n3\\n\\n    Code1\\n    Code2\");\n      assert(sections.length === 1);\n      assert(sections.first().text === \"1\\n2\\n3\");\n      return assert(sections.first().code === \"Code1\\nCode2\");\n    });\n  });\n\n  describe(\"A normal markdown paragraph\", function() {\n    return it(\"should keep newlines within\", function() {\n      var sections;\n      sections = md.parse(\"Intro\\n-----\\n\\nI'm talking about stuff.\\n\\nParagraph two is rad!\");\n      return assert(sections.first().text.match(\"\\n\\n\"));\n    });\n  });\n\n  describe(\"Many code text sequences\", function() {\n    return it(\"should add text in new sections after code\", function() {\n      var sections;\n      sections = md.parse(\"Some description\\n\\n    Code\\n\\nAnother description\\n\\n    More code\\n\\nHey\");\n      return assert(sections.length === 3);\n    });\n  });\n\n}).call(this);\n",
+      "type": "blob"
+    }
+  },
+  "entryPoint": "main",
+  "dependencies": {},
+  "remoteDependencies": [
+    "http://strd6.github.io/tempest/javascripts/envweb.js",
+    "http://strd6.github.io/require/master.js"
+  ],
+  "repository": {
+    "id": 13102476,
+    "name": "md",
+    "full_name": "STRd6/md",
+    "owner": {
+      "login": "STRd6",
+      "id": 18894,
+      "avatar_url": "https://0.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
+      "gravatar_id": "33117162fff8a9cf50544a604f60c045",
+      "url": "https://api.github.com/users/STRd6",
+      "html_url": "https://github.com/STRd6",
+      "followers_url": "https://api.github.com/users/STRd6/followers",
+      "following_url": "https://api.github.com/users/STRd6/following{/other_user}",
+      "gists_url": "https://api.github.com/users/STRd6/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/STRd6/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/STRd6/subscriptions",
+      "organizations_url": "https://api.github.com/users/STRd6/orgs",
+      "repos_url": "https://api.github.com/users/STRd6/repos",
+      "events_url": "https://api.github.com/users/STRd6/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/STRd6/received_events",
+      "type": "User"
+    },
+    "private": false,
+    "html_url": "https://github.com/STRd6/md",
+    "description": "Generate documentation from from literate code files.",
+    "fork": false,
+    "url": "https://api.github.com/repos/STRd6/md",
+    "forks_url": "https://api.github.com/repos/STRd6/md/forks",
+    "keys_url": "https://api.github.com/repos/STRd6/md/keys{/key_id}",
+    "collaborators_url": "https://api.github.com/repos/STRd6/md/collaborators{/collaborator}",
+    "teams_url": "https://api.github.com/repos/STRd6/md/teams",
+    "hooks_url": "https://api.github.com/repos/STRd6/md/hooks",
+    "issue_events_url": "https://api.github.com/repos/STRd6/md/issues/events{/number}",
+    "events_url": "https://api.github.com/repos/STRd6/md/events",
+    "assignees_url": "https://api.github.com/repos/STRd6/md/assignees{/user}",
+    "branches_url": "https://api.github.com/repos/STRd6/md/branches{/branch}",
+    "tags_url": "https://api.github.com/repos/STRd6/md/tags",
+    "blobs_url": "https://api.github.com/repos/STRd6/md/git/blobs{/sha}",
+    "git_tags_url": "https://api.github.com/repos/STRd6/md/git/tags{/sha}",
+    "git_refs_url": "https://api.github.com/repos/STRd6/md/git/refs{/sha}",
+    "trees_url": "https://api.github.com/repos/STRd6/md/git/trees{/sha}",
+    "statuses_url": "https://api.github.com/repos/STRd6/md/statuses/{sha}",
+    "languages_url": "https://api.github.com/repos/STRd6/md/languages",
+    "stargazers_url": "https://api.github.com/repos/STRd6/md/stargazers",
+    "contributors_url": "https://api.github.com/repos/STRd6/md/contributors",
+    "subscribers_url": "https://api.github.com/repos/STRd6/md/subscribers",
+    "subscription_url": "https://api.github.com/repos/STRd6/md/subscription",
+    "commits_url": "https://api.github.com/repos/STRd6/md/commits{/sha}",
+    "git_commits_url": "https://api.github.com/repos/STRd6/md/git/commits{/sha}",
+    "comments_url": "https://api.github.com/repos/STRd6/md/comments{/number}",
+    "issue_comment_url": "https://api.github.com/repos/STRd6/md/issues/comments/{number}",
+    "contents_url": "https://api.github.com/repos/STRd6/md/contents/{+path}",
+    "compare_url": "https://api.github.com/repos/STRd6/md/compare/{base}...{head}",
+    "merges_url": "https://api.github.com/repos/STRd6/md/merges",
+    "archive_url": "https://api.github.com/repos/STRd6/md/{archive_format}{/ref}",
+    "downloads_url": "https://api.github.com/repos/STRd6/md/downloads",
+    "issues_url": "https://api.github.com/repos/STRd6/md/issues{/number}",
+    "pulls_url": "https://api.github.com/repos/STRd6/md/pulls{/number}",
+    "milestones_url": "https://api.github.com/repos/STRd6/md/milestones{/number}",
+    "notifications_url": "https://api.github.com/repos/STRd6/md/notifications{?since,all,participating}",
+    "labels_url": "https://api.github.com/repos/STRd6/md/labels{/name}",
+    "created_at": "2013-09-25T18:55:25Z",
+    "updated_at": "2013-09-25T18:55:25Z",
+    "pushed_at": "2013-09-25T18:55:25Z",
+    "git_url": "git://github.com/STRd6/md.git",
+    "ssh_url": "git@github.com:STRd6/md.git",
+    "clone_url": "https://github.com/STRd6/md.git",
+    "svn_url": "https://github.com/STRd6/md",
+    "homepage": null,
+    "size": 0,
+    "watchers_count": 0,
+    "language": null,
+    "has_issues": true,
+    "has_downloads": true,
+    "has_wiki": true,
+    "forks_count": 0,
+    "mirror_url": null,
+    "open_issues_count": 0,
+    "forks": 0,
+    "open_issues": 0,
+    "watchers": 0,
+    "master_branch": "master",
+    "default_branch": "master",
+    "permissions": {
+      "admin": true,
+      "push": true,
+      "pull": true
+    },
+    "network_count": 0,
+    "branch": "master",
+    "defaultBranch": "master",
+    "includedModules": [
+      "Bindable"
+    ]
+  },
+  "progenitor": {
+    "url": "http://strd6.github.io/editor/"
+  }
+});
