@@ -1,12 +1,14 @@
 (function() {
-  var blank, indent, parse;
+  var blank, indent, parse, sectionBreak, truncateEmpties;
 
   indent = /^([ ]{4}|\t)/;
 
   blank = /^\s*$/;
 
+  sectionBreak = /^(---+|===+)$/;
+
   parse = function(source) {
-    var Section, lastSection, lastWasCode, pushCode, pushEmpty, pushText, sections, truncateEmpties;
+    var Section, lastSection, lastWasCode, pushCode, pushEmpty, pushText, sections;
     Section = function() {
       return {
         text: [],
@@ -27,15 +29,11 @@
         section.text.push(text);
         return sections.push(section);
       } else {
-        return lastSection().text.push(text);
+        lastSection().text.push(text);
+        if (sectionBreak.test(text)) {
+          return sections.push(Section());
+        }
       }
-    };
-    truncateEmpties = function(array) {
-      var last;
-      while (((last = array.last()) != null) && last === "") {
-        array.pop();
-      }
-      return array;
     };
     pushEmpty = function() {
       if (lastWasCode) {
@@ -65,6 +63,14 @@
 
   module.exports = {
     parse: parse
+  };
+
+  truncateEmpties = function(array) {
+    var last;
+    while (((last = array.last()) != null) && last === "") {
+      array.pop();
+    }
+    return array;
   };
 
 }).call(this);
