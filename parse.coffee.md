@@ -3,7 +3,10 @@ Parse
 
 Parse a Markdown document into an array of sections that contain code and text.
 
+Implementation
+--------------
 
+RegExes for detecting indentation, blank lines, and section breaks.
 
     indent = /^([ ]{4}|\t)/
     blank = /^\s*$/
@@ -13,7 +16,7 @@ Parsing converts a string of Markdown text into an array of sections.
 
     parse = (source) ->
 
-A helper to create section objects.
+A helper to create section objects. Each section contains text and code.
 
       Section = ->
         text: []
