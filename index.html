@@ -8,10 +8,10 @@
 <body>
 <script>
 ;(function(PACKAGE) {
-require = Require.generateFor(PACKAGE)
+var require = Require.generateFor(PACKAGE);
 require('./main')
 })({
-  "version": "0.1.0",
+  "version": "0.1.1",
   "source": {
     "LICENSE": {
       "path": "LICENSE",
@@ -23,6 +23,12 @@ require('./main')
       "path": "README.md",
       "mode": "100644",
       "content": "md\n==\n\nGenerate documentation from from literate code files.\n",
+      "type": "blob"
+    },
+    "documenter.coffee.md": {
+      "path": "documenter.coffee.md",
+      "mode": "100644",
+      "content": "Documenter\n==========\n\nThis is a stopgap documenter until we get a nicer one.\n\nIt documents Markdown files using a Github API compatible markdown service.\n\nThe content of our stylesheet for rendering inline.\n\n    style = require \"./style/markdown\"\n\nExport a constructor that when given a markdown service returns a documenter.\n\n    module.exports = (markdownService) ->\n      documenter =\n\nReturns a promise that will be fulfilled with html when the markdown source is \nconverted.\n\n        document: (source) ->\n          markdownService(source)\n\nDocument all source files in a package.\n\n        documentAll: (pkg) ->\n          {entryPoint, source, repository} = pkg\n          {branch, default_branch} = repository\n\n          if branch is default_branch\n            base = \"docs\"\n          else\n            base = \"#{branch}/docs\"\n\n          documentableFiles = Object.keys(source).select (name) ->\n            name.extension() is \"md\"\n          \n          promises = documentableFiles.map (name) ->\n            documenter.document source[name].content\n          \n          Deferred.when(promises).then (results) ->\n            index = []\n\n            results.map (result, i) ->\n              # Assuming .*.md so we should strip the extension twice\n              name = documentableFiles[i].withoutExtension().withoutExtension()\n              \n              content = documenter.template name, result.first()\n              \n              # Add an index.html if our file is the entry point\n              if name is entryPoint\n                index.push\n                  path: \"#{base}/index.html\"\n                  content: content\n\n              path: \"#{base}/#{name}.html\"\n              content: content\n            .concat(index)\n\nA super simple template with inline CSS.\n\n        template: (title, html) ->\n          \"\"\"\n            <html>\n            <head>\n            <title>#{title}</title>\n            <style>\n            #{style}\n            </style>\n            </head>\n            <body>\n            #{html}\n            </body>\n            </html>\n          \"\"\"",
       "type": "blob"
     },
     "main.coffee.md": {
@@ -40,7 +46,13 @@ require('./main')
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.1.0\"\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/master.js\"\n]\n",
+      "content": "version: \"0.1.1\"\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/master.js\"\n]\n",
+      "type": "blob"
+    },
+    "style/markdown.css": {
+      "path": "style/markdown.css",
+      "mode": "100644",
+      "content": "body{\n    margin: 0 auto;\n    font-family: Georgia, Palatino, serif;\n    color: #444444;\n    line-height: 1;\n    max-width: 960px;\n    padding: 30px;\n}\nh1, h2, h3, h4 {\n    color: #111111;\n    font-weight: 400;\n}\nh1, h2, h3, h4, h5, p {\n    margin-bottom: 24px;\n    padding: 0;\n}\nh1 {\n    font-size: 48px;\n}\nh2 {\n    font-size: 36px;\n    /* The bottom margin is small. It's designed to be used with gray meta text\n     * below a post title. */\n    margin: 24px 0 6px;\n}\nh3 {\n    font-size: 24px;\n}\nh4 {\n    font-size: 21px;\n}\nh5 {\n    font-size: 18px;\n}\na {\n    color: #0099ff;\n    margin: 0;\n    padding: 0;\n    vertical-align: baseline;\n}\na:hover {\n    text-decoration: none;\n    color: #ff6600;\n}\na:visited {\n    color: purple;\n}\nul, ol {\n    padding: 0;\n    margin: 0;\n}\nli {\n    line-height: 24px;\n}\nli ul, li ul {\n    margin-left: 24px;\n}\np, ul, ol {\n    font-size: 16px;\n    line-height: 24px;\n    max-width: 540px;\n}\npre {\n    padding: 0px 24px;\n    max-width: 800px;\n    white-space: pre-wrap;\n}\ncode {\n    font-family: Consolas, Monaco, Andale Mono, monospace;\n    line-height: 1.5;\n    font-size: 13px;\n}\naside {\n    display: block;\n    float: right;\n    width: 390px;\n}\nblockquote {\n    border-left:.5em solid #eee;\n    padding: 0 2em;\n    margin-left:0;\n    max-width: 476px;\n}\nblockquote  cite {\n    font-size:14px;\n    line-height:20px;\n    color:#bfbfbf;\n}\nblockquote cite:before {\n    content: '\\2014 \\00A0';\n}\n\nblockquote p {  \n    color: #666;\n    max-width: 460px;\n}\nhr {\n    width: 540px;\n    text-align: left;\n    margin: 0 auto 0 0;\n    color: #999;\n}",
       "type": "blob"
     },
     "template.coffee.md": {
@@ -60,21 +72,14 @@ require('./main')
       "mode": "100644",
       "content": "template = require \"../template\"\n\ndescribe \"template\", ->\n  it \"should exist\", ->\n    assert template\n\n  it \"should render html when given a title and sections\", ->\n    result = template\n      title: \"Test\"\n      sections: [\n        docsHtml: \"<h1>Hello</h1>\"\n        codeHtml: \"<pre>1 + 1 == 2</pre>\"\n      ]\n\n    assert result\n",
       "type": "blob"
-    },
-    "documenter.coffee.md": {
-      "path": "documenter.coffee.md",
-      "mode": "100644",
-      "content": "Documenter\n==========\n\nThis is a stopgap documenter until we get a nicer one.\n\nIt documents Markdown files using a Github API compatible markdown service.\n\nThe content of our stylesheet for rendering inline.\n\n    style = require \"./style/markdown\"\n\nExport a constructor that when given a markdown service returns a documenter.\n\n    module.exports = (markdownService) ->\n      documenter =\n\nReturns a promise that will be fulfilled with html when the markdown source is \nconverted.\n\n        document: (source) ->\n          markdownService(source)\n\nDocument all source files in a package.\n\n        documentAll: (pkg) ->\n          {entryPoint, source, repository} = pkg\n          {branch, default_branch} = repository\n\n          if branch is default_branch\n            base = \"docs\"\n          else\n            base = \"#{branch}/docs\"\n\n          documentableFiles = Object.keys(source).select (name) ->\n            name.extension() is \"md\"\n          \n          promises = documentableFiles.map (name) ->\n            documenter.document source[name].content\n          \n          Deferred.when(promises).then (results) ->\n            index = []\n\n            results.map (result, i) ->\n              # Assuming .*.md so we should strip the extension twice\n              name = documentableFiles[i].withoutExtension().withoutExtension()\n              \n              content = documenter.template name, result.first()\n              \n              # Add an index.html if our file is the entry point\n              if name is entryPoint\n                index.push\n                  path: \"#{base}/index.html\"\n                  content: content\n\n              path: \"#{base}/#{name}.html\"\n              content: content\n            .concat(index)\n\nA super simple template with inline CSS.\n\n        template: (title, html) ->\n          \"\"\"\n            <html>\n            <head>\n            <title>#{title}</title>\n            <style>\n            #{style}\n            </style>\n            </head>\n            <body>\n            #{html}\n            </body>\n            </html>\n          \"\"\"",
-      "type": "blob"
-    },
-    "style/markdown.css": {
-      "path": "style/markdown.css",
-      "mode": "100644",
-      "content": "body{\n    margin: 0 auto;\n    font-family: Georgia, Palatino, serif;\n    color: #444444;\n    line-height: 1;\n    max-width: 960px;\n    padding: 30px;\n}\nh1, h2, h3, h4 {\n    color: #111111;\n    font-weight: 400;\n}\nh1, h2, h3, h4, h5, p {\n    margin-bottom: 24px;\n    padding: 0;\n}\nh1 {\n    font-size: 48px;\n}\nh2 {\n    font-size: 36px;\n    /* The bottom margin is small. It's designed to be used with gray meta text\n     * below a post title. */\n    margin: 24px 0 6px;\n}\nh3 {\n    font-size: 24px;\n}\nh4 {\n    font-size: 21px;\n}\nh5 {\n    font-size: 18px;\n}\na {\n    color: #0099ff;\n    margin: 0;\n    padding: 0;\n    vertical-align: baseline;\n}\na:hover {\n    text-decoration: none;\n    color: #ff6600;\n}\na:visited {\n    color: purple;\n}\nul, ol {\n    padding: 0;\n    margin: 0;\n}\nli {\n    line-height: 24px;\n}\nli ul, li ul {\n    margin-left: 24px;\n}\np, ul, ol {\n    font-size: 16px;\n    line-height: 24px;\n    max-width: 540px;\n}\npre {\n    padding: 0px 24px;\n    max-width: 800px;\n    white-space: pre-wrap;\n}\ncode {\n    font-family: Consolas, Monaco, Andale Mono, monospace;\n    line-height: 1.5;\n    font-size: 13px;\n}\naside {\n    display: block;\n    float: right;\n    width: 390px;\n}\nblockquote {\n    border-left:.5em solid #eee;\n    padding: 0 2em;\n    margin-left:0;\n    max-width: 476px;\n}\nblockquote  cite {\n    font-size:14px;\n    line-height:20px;\n    color:#bfbfbf;\n}\nblockquote cite:before {\n    content: '\\2014 \\00A0';\n}\n\nblockquote p {  \n    color: #666;\n    max-width: 460px;\n}\nhr {\n    width: 540px;\n    text-align: left;\n    margin: 0 auto 0 0;\n    color: #999;\n}",
-      "type": "blob"
     }
   },
   "distribution": {
+    "documenter": {
+      "path": "documenter",
+      "content": "(function() {\n  var style;\n\n  style = require(\"./style/markdown\");\n\n  module.exports = function(markdownService) {\n    var documenter;\n    return documenter = {\n      document: function(source) {\n        return markdownService(source);\n      },\n      documentAll: function(pkg) {\n        var base, branch, default_branch, documentableFiles, entryPoint, promises, repository, source;\n        entryPoint = pkg.entryPoint, source = pkg.source, repository = pkg.repository;\n        branch = repository.branch, default_branch = repository.default_branch;\n        if (branch === default_branch) {\n          base = \"docs\";\n        } else {\n          base = \"\" + branch + \"/docs\";\n        }\n        documentableFiles = Object.keys(source).select(function(name) {\n          return name.extension() === \"md\";\n        });\n        promises = documentableFiles.map(function(name) {\n          return documenter.document(source[name].content);\n        });\n        return Deferred.when(promises).then(function(results) {\n          var index;\n          index = [];\n          return results.map(function(result, i) {\n            var content, name;\n            name = documentableFiles[i].withoutExtension().withoutExtension();\n            content = documenter.template(name, result.first());\n            if (name === entryPoint) {\n              index.push({\n                path: \"\" + base + \"/index.html\",\n                content: content\n              });\n            }\n            return {\n              path: \"\" + base + \"/\" + name + \".html\",\n              content: content\n            };\n          }).concat(index);\n        });\n      },\n      template: function(title, html) {\n        return \"<html>\\n<head>\\n<title>\" + title + \"</title>\\n<style>\\n\" + style + \"\\n</style>\\n</head>\\n<body>\\n\" + html + \"\\n</body>\\n</html>\";\n      }\n    };\n  };\n\n}).call(this);\n",
+      "type": "blob"
+    },
     "main": {
       "path": "main",
       "content": "(function() {\n  module.exports = {\n    parse: require('./parse')\n  };\n\n}).call(this);\n",
@@ -83,6 +88,11 @@ require('./main')
     "parse": {
       "path": "parse",
       "content": "(function() {\n  var blank, indent, parse, sectionBreak, truncateEmpties;\n\n  indent = /^([ ]{4}|\\t)/;\n\n  blank = /^\\s*$/;\n\n  sectionBreak = /^(---+|===+)$/;\n\n  parse = function(source) {\n    var Section, lastSection, lastWasCode, pushCode, pushEmpty, pushText, sections;\n    Section = function() {\n      return {\n        text: [],\n        code: []\n      };\n    };\n    sections = [Section()];\n    lastSection = function() {\n      return sections.last();\n    };\n    pushCode = function(code) {\n      return lastSection().code.push(code);\n    };\n    pushText = function(text) {\n      var section;\n      if (lastSection().code.length) {\n        section = Section();\n        section.text.push(text);\n        return sections.push(section);\n      } else {\n        lastSection().text.push(text);\n        if (sectionBreak.test(text)) {\n          return sections.push(Section());\n        }\n      }\n    };\n    pushEmpty = function() {\n      if (lastWasCode) {\n        return pushCode(\"\");\n      } else {\n        return lastSection().text.push(\"\");\n      }\n    };\n    lastWasCode = false;\n    source.split(\"\\n\").each(function(line) {\n      var match;\n      if (blank.exec(line)) {\n        return pushEmpty();\n      } else if (match = indent.exec(line)) {\n        lastWasCode = true;\n        return pushCode(line.slice(match[0].length));\n      } else {\n        lastWasCode = false;\n        return pushText(line);\n      }\n    });\n    return sections.each(function(section) {\n      section.text = truncateEmpties(section.text).join(\"\\n\");\n      return section.code = truncateEmpties(section.code).join(\"\\n\");\n    });\n  };\n\n  module.exports = parse;\n\n  truncateEmpties = function(array) {\n    var last;\n    while (((last = array.last()) != null) && last === \"\") {\n      array.pop();\n    }\n    return array;\n  };\n\n}).call(this);\n",
+      "type": "blob"
+    },
+    "style/markdown": {
+      "path": "style/markdown",
+      "content": "module.exports = \"body{\\n    margin: 0 auto;\\n    font-family: Georgia, Palatino, serif;\\n    color: #444444;\\n    line-height: 1;\\n    max-width: 960px;\\n    padding: 30px;\\n}\\nh1, h2, h3, h4 {\\n    color: #111111;\\n    font-weight: 400;\\n}\\nh1, h2, h3, h4, h5, p {\\n    margin-bottom: 24px;\\n    padding: 0;\\n}\\nh1 {\\n    font-size: 48px;\\n}\\nh2 {\\n    font-size: 36px;\\n    /* The bottom margin is small. It's designed to be used with gray meta text\\n     * below a post title. */\\n    margin: 24px 0 6px;\\n}\\nh3 {\\n    font-size: 24px;\\n}\\nh4 {\\n    font-size: 21px;\\n}\\nh5 {\\n    font-size: 18px;\\n}\\na {\\n    color: #0099ff;\\n    margin: 0;\\n    padding: 0;\\n    vertical-align: baseline;\\n}\\na:hover {\\n    text-decoration: none;\\n    color: #ff6600;\\n}\\na:visited {\\n    color: purple;\\n}\\nul, ol {\\n    padding: 0;\\n    margin: 0;\\n}\\nli {\\n    line-height: 24px;\\n}\\nli ul, li ul {\\n    margin-left: 24px;\\n}\\np, ul, ol {\\n    font-size: 16px;\\n    line-height: 24px;\\n    max-width: 540px;\\n}\\npre {\\n    padding: 0px 24px;\\n    max-width: 800px;\\n    white-space: pre-wrap;\\n}\\ncode {\\n    font-family: Consolas, Monaco, Andale Mono, monospace;\\n    line-height: 1.5;\\n    font-size: 13px;\\n}\\naside {\\n    display: block;\\n    float: right;\\n    width: 390px;\\n}\\nblockquote {\\n    border-left:.5em solid #eee;\\n    padding: 0 2em;\\n    margin-left:0;\\n    max-width: 476px;\\n}\\nblockquote  cite {\\n    font-size:14px;\\n    line-height:20px;\\n    color:#bfbfbf;\\n}\\nblockquote cite:before {\\n    content: '\\\\2014 \\\\00A0';\\n}\\n\\nblockquote p {  \\n    color: #666;\\n    max-width: 460px;\\n}\\nhr {\\n    width: 540px;\\n    text-align: left;\\n    margin: 0 auto 0 0;\\n    color: #999;\\n}\"",
       "type": "blob"
     },
     "template": {
@@ -98,11 +108,6 @@ require('./main')
     "test/template": {
       "path": "test/template",
       "content": "(function() {\n  var template;\n\n  template = require(\"../template\");\n\n  describe(\"template\", function() {\n    it(\"should exist\", function() {\n      return assert(template);\n    });\n    return it(\"should render html when given a title and sections\", function() {\n      var result;\n      result = template({\n        title: \"Test\",\n        sections: [\n          {\n            docsHtml: \"<h1>Hello</h1>\",\n            codeHtml: \"<pre>1 + 1 == 2</pre>\"\n          }\n        ]\n      });\n      return assert(result);\n    });\n  });\n\n}).call(this);\n",
-      "type": "blob"
-    },
-    "documenter": {
-      "path": "documenter",
-      "content": "(function() {\n  var style;\n\n  style = require(\"./style/markdown\");\n\n  module.exports = function(markdownService) {\n    var documenter;\n    return documenter = {\n      document: function(source) {\n        return markdownService(source);\n      },\n      documentAll: function(pkg) {\n        var base, branch, default_branch, documentableFiles, entryPoint, promises, repository, source;\n        entryPoint = pkg.entryPoint, source = pkg.source, repository = pkg.repository;\n        branch = repository.branch, default_branch = repository.default_branch;\n        if (branch === default_branch) {\n          base = \"docs\";\n        } else {\n          base = \"\" + branch + \"/docs\";\n        }\n        documentableFiles = Object.keys(source).select(function(name) {\n          return name.extension() === \"md\";\n        });\n        promises = documentableFiles.map(function(name) {\n          return documenter.document(source[name].content);\n        });\n        return Deferred.when(promises).then(function(results) {\n          var index;\n          index = [];\n          return results.map(function(result, i) {\n            var content, name;\n            name = documentableFiles[i].withoutExtension().withoutExtension();\n            content = documenter.template(name, result.first());\n            if (name === entryPoint) {\n              index.push({\n                path: \"\" + base + \"/index.html\",\n                content: content\n              });\n            }\n            return {\n              path: \"\" + base + \"/\" + name + \".html\",\n              content: content\n            };\n          }).concat(index);\n        });\n      },\n      template: function(title, html) {\n        return \"<html>\\n<head>\\n<title>\" + title + \"</title>\\n<style>\\n\" + style + \"\\n</style>\\n</head>\\n<body>\\n\" + html + \"\\n</body>\\n</html>\";\n      }\n    };\n  };\n\n}).call(this);\n",
       "type": "blob"
     }
   },
@@ -120,7 +125,7 @@ require('./main')
     "owner": {
       "login": "STRd6",
       "id": 18894,
-      "avatar_url": "https://2.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
+      "avatar_url": "https://0.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
       "gravatar_id": "33117162fff8a9cf50544a604f60c045",
       "url": "https://api.github.com/users/STRd6",
       "html_url": "https://github.com/STRd6",
@@ -175,14 +180,14 @@ require('./main')
     "notifications_url": "https://api.github.com/repos/STRd6/md/notifications{?since,all,participating}",
     "labels_url": "https://api.github.com/repos/STRd6/md/labels{/name}",
     "created_at": "2013-09-25T18:55:25Z",
-    "updated_at": "2013-09-26T21:24:06Z",
-    "pushed_at": "2013-09-26T21:24:05Z",
+    "updated_at": "2013-09-26T23:58:31Z",
+    "pushed_at": "2013-09-26T23:58:31Z",
     "git_url": "git://github.com/STRd6/md.git",
     "ssh_url": "git@github.com:STRd6/md.git",
     "clone_url": "https://github.com/STRd6/md.git",
     "svn_url": "https://github.com/STRd6/md",
     "homepage": null,
-    "size": 440,
+    "size": 624,
     "watchers_count": 0,
     "language": "CoffeeScript",
     "has_issues": true,
