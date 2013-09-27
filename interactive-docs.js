@@ -31,7 +31,7 @@
       });
     },
     documentAll: function(pkg) {
-      var base, branch, default_branch, documentableFiles, entryPoint, promises, repository, source;
+      var base, branch, default_branch, documentableFiles, entryPoint, repository, results, source;
       entryPoint = pkg.entryPoint, source = pkg.source, repository = pkg.repository;
       branch = repository.branch, default_branch = repository.default_branch;
       if (branch === default_branch) {
@@ -42,8 +42,8 @@
       documentableFiles = Object.keys(source).select(function(name) {
         return name.extension() === "md";
       });
-      promises = documentableFiles.map(function(name) {
-        return Deferred().resolve(doctor.compile(source[name].content));
+      results = documentableFiles.map(function(name) {
+        return doctor.compile(source[name].content);
       });
       return Deferred.when(promises).then(function(results) {
         var index;
