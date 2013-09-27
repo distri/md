@@ -6,6 +6,7 @@ describe "template", ->
 
   it "should render html when given a title and sections", ->
     result = template
+      scripts: ""
       title: "Test"
       sections: [
         docsHtml: "<h1>Hello</h1>"

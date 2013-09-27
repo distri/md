@@ -1,4 +1,9 @@
 md = require "../main"
+marked = require "../lib/marked"
+
+describe "marked markdown generation", ->
+  it "should compile markdown", ->
+    assert marked 'I am using __markdown__.'
 
 describe "Parsing", ->
   it "should return an array of sections", ->
