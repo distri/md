@@ -1,9 +1,14 @@
 md = require "../main"
 marked = require "../lib/marked"
+highlight = require "../lib/highlight"
 
 describe "marked markdown generation", ->
   it "should compile markdown", ->
     assert marked 'I am using __markdown__.'
+    
+describe "hightlight.js", ->
+  it "highlight stuff", ->
+    assert highlight
 
 describe "Parsing", ->
   it "should return an array of sections", ->
@@ -68,3 +73,21 @@ describe "Many code text sequences", ->
     """
     
     assert sections.length is 3
+
+describe "documenting a file", ->
+  it "should be 2legit", ->
+    assert md.compile("Hey")
+
+describe "documenting a file package", ->
+  it "should be 2legit", (done) ->
+    md.documentAll(
+      repository:
+        branch: "master"
+        default_branch: "master"
+      entryPoint: "main"
+      source:
+        "main.coffee.md": 
+          content: "Yolo is a lifestyle choice\n    alert 'wat'"
+    ).then (results) ->
+      console.log results
+      done()
