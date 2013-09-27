@@ -159,8 +159,8 @@ marked.setOptions
     documentableFiles = Object.keys(source).select (name) -&gt;
       name.extension() is "md"
 
-    promises = documentableFiles.map (name) -&gt;
-      Deferred().resolve(doctor.compile(source[name].content))
+    results = documentableFiles.map (name) -&gt;
+      doctor.compile source[name].content
 
     Deferred.when(promises).then (results) -&gt;
       index = []
