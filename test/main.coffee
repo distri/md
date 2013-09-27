@@ -73,3 +73,19 @@ describe "Many code text sequences", ->
     """
     
     assert sections.length is 3
+
+describe "documenting a file", ->
+  it "should be 2legit", (done) ->
+    
+    
+describe "documenting a file package", ->
+  it "should be 2legit", (done) ->
+    md.documentAll(
+      repository:
+        branch: "master"
+        default_branch: "master"
+      source:
+        "main.coffee.md": "Yolo is a lifestyle choice\n    alert 'wat'"
+    ).then ->
+      console.log "done"
+      done()

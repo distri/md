@@ -49,8 +49,8 @@ Document one file.
         documentableFiles = Object.keys(source).select (name) ->
           name.extension() is "md"
         
-        promises = documentableFiles.map (name) ->
-          Deferred().resolve(doctor.compile(source[name].content))
+        results = documentableFiles.map (name) ->
+          doctor.compile source[name].content
 
         Deferred.when(promises).then (results) ->
           index = []
