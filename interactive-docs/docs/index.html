@@ -121,31 +121,31 @@ highlight = require "./lib/highlight"
 
 marked.setOptions
   highlight: (code, lang) -&gt;
-    if highlightjs.LANGUAGES[lang]
-      highlightjs.highlight(lang, code).value
+    if highlight.LANGUAGES[lang]
+      highlight.highlight(lang, code).value
     else
       console.warn "couldn't highlight code block with unknown language '#{lang}' in #{source}"
 
       code
-  smartypants: true
 </code></pre>
 
 <p>Export our public api.</p>
 
 <pre><code>module.exports = doctor =
   parse: require('./parse')
+</code></pre>
 
-  template: require('./template')
+<p>Our docco style template.</p>
+
+<pre><code>  template: require('./template')
 </code></pre>
 
 <p>Document one file.</p>
 
-<pre><code>  compile: (content) -&gt;
+<pre><code>  compile: (content, language="coffeescript") -&gt;
     doctor.parse(content).map ({text, code}) -&gt;
-      # TODO: Add syntax highlighting
-
       docsHtml: marked(text)
-      codeHtml: marked("&lt;div class='highlight'&gt;&lt;pre&gt;#{code}&lt;/pre&gt;&lt;/div&gt;")
+      codeHtml: marked "```#{language}\n#{code}\n```"
 
   documentAll: (pkg) -&gt;
     {entryPoint, source, repository} = pkg
@@ -162,27 +162,28 @@ marked.setOptions
     results = documentableFiles.map (name) -&gt;
       doctor.compile source[name].content
 
-    Deferred.when(promises).then (results) -&gt;
-      index = []
+    index = []
 
-      results.map (result, i) -&gt;
-        # Assuming .*.md so we should strip the extension twice
-        name = documentableFiles[i].withoutExtension().withoutExtension()
+    results = results.map (result, i) -&gt;
+      # Assuming .*.md so we should strip the extension twice
+      name = documentableFiles[i].withoutExtension().withoutExtension()
 
-        content = doctor.template
-          title: name
-          sections: result
-          scripts: ""
+      content = doctor.template
+        title: name
+        sections: result
+        scripts: ""
 
-        # Add an index.html if our file is the entry point
-        if name is entryPoint
-          index.push
-            path: "#{base}/index.html"
-            content: content
+      # Add an index.html if our file is the entry point
+      if name is entryPoint
+        index.push
+          path: "#{base}/index.html"
+          content: content
 
-        path: "#{base}/#{name}.html"
-        content: content
-      .concat(index)
+      path: "#{base}/#{name}.html"
+      content: content
+    .concat(index)
+
+    Deferred().resolve(results)
 </code></pre>
 </body>
 </html>
