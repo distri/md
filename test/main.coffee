@@ -1,9 +1,14 @@
 md = require "../main"
 marked = require "../lib/marked"
+highlight = require "../lib/highlight"
 
 describe "marked markdown generation", ->
   it "should compile markdown", ->
     assert marked 'I am using __markdown__.'
+    
+describe "hightlight.js", ->
+  it "highlight stuff", ->
+    assert highlight
 
 describe "Parsing", ->
   it "should return an array of sections", ->
