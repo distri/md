@@ -1,0 +1,210 @@
+<html>
+<head>
+<title>parse</title>
+<style>
+body{
+    margin: 0 auto;
+    font-family: Georgia, Palatino, serif;
+    color: #444444;
+    line-height: 1;
+    max-width: 960px;
+    padding: 30px;
+}
+h1, h2, h3, h4 {
+    color: #111111;
+    font-weight: 400;
+}
+h1, h2, h3, h4, h5, p {
+    margin-bottom: 24px;
+    padding: 0;
+}
+h1 {
+    font-size: 48px;
+}
+h2 {
+    font-size: 36px;
+    /* The bottom margin is small. It's designed to be used with gray meta text
+     * below a post title. */
+    margin: 24px 0 6px;
+}
+h3 {
+    font-size: 24px;
+}
+h4 {
+    font-size: 21px;
+}
+h5 {
+    font-size: 18px;
+}
+a {
+    color: #0099ff;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+a:hover {
+    text-decoration: none;
+    color: #ff6600;
+}
+a:visited {
+    color: purple;
+}
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+li {
+    line-height: 24px;
+}
+li ul, li ul {
+    margin-left: 24px;
+}
+p, ul, ol {
+    font-size: 16px;
+    line-height: 24px;
+    max-width: 540px;
+}
+pre {
+    padding: 0px 24px;
+    max-width: 800px;
+    white-space: pre-wrap;
+}
+code {
+    font-family: Consolas, Monaco, Andale Mono, monospace;
+    line-height: 1.5;
+    font-size: 13px;
+}
+aside {
+    display: block;
+    float: right;
+    width: 390px;
+}
+blockquote {
+    border-left:.5em solid #eee;
+    padding: 0 2em;
+    margin-left:0;
+    max-width: 476px;
+}
+blockquote  cite {
+    font-size:14px;
+    line-height:20px;
+    color:#bfbfbf;
+}
+blockquote cite:before {
+    content: '\2014 \00A0';
+}
+
+blockquote p {  
+    color: #666;
+    max-width: 460px;
+}
+hr {
+    width: 540px;
+    text-align: left;
+    margin: 0 auto 0 0;
+    color: #999;
+}
+</style>
+</head>
+<body>
+<h1>
+<a name="parse" class="anchor" href="#parse"><span class="octicon octicon-link"></span></a>Parse</h1>
+
+<p>Parse a Markdown document into an array of sections that contain code and text.</p>
+
+<h2>
+<a name="implementation" class="anchor" href="#implementation"><span class="octicon octicon-link"></span></a>Implementation</h2>
+
+<p>RegExes for detecting indentation, blank lines, and section breaks.</p>
+
+<pre><code>indent = /^([ ]{4}|\t)/
+blank = /^\s*$/
+sectionBreak = /^(---+|===+)$/
+</code></pre>
+
+<p>Parsing converts a string of Markdown text into an array of sections.</p>
+
+<pre><code>parse = (source) -&gt;
+</code></pre>
+
+<p>A helper to create section objects. Each section contains text and code.</p>
+
+<pre><code>  Section = -&gt;
+    text: []
+    code: []
+</code></pre>
+
+<p>Our array of sections that we will return.</p>
+
+<pre><code>  sections = [Section()]
+</code></pre>
+
+<p>A helper to get the last section in the array.</p>
+
+<pre><code>  lastSection = -&gt;
+    sections.last()
+</code></pre>
+
+<p>Whenever we encounter code we push it onto the last section.</p>
+
+<pre><code>  pushCode = (code) -&gt;
+    lastSection().code.push code
+</code></pre>
+
+<p>Pushing text is a little bit more complicated. If the last section has code in
+it then we need to push a new section on and add the text to that.</p>
+
+<p>If the last section is doesn't have any code yet we can push our text onto it.</p>
+
+<p>If our text matches a <code>sectionbreak</code> then we push a new section after adding
+our text to the previous section.</p>
+
+<pre><code>  pushText = (text) -&gt;
+    if lastSection().code.length
+      section = Section()
+      section.text.push text
+      sections.push section
+    else
+      lastSection().text.push text
+
+      sections.push Section() if sectionBreak.test text
+
+  pushEmpty = -&gt;
+    if lastWasCode
+      pushCode("")
+    else
+      lastSection().text.push ""
+
+  lastWasCode = false
+
+  source.split("\n").each (line) -&gt;
+    if blank.exec(line)
+      pushEmpty()
+    else if match = indent.exec(line)
+      lastWasCode = true
+      pushCode line[match[0].length..]
+    else
+      lastWasCode = false
+      pushText line
+
+  sections.each (section) -&gt;       
+    section.text = truncateEmpties(section.text).join("\n")
+    section.code = truncateEmpties(section.code).join("\n")
+
+module.exports = parse
+</code></pre>
+
+<h2>
+<a name="helpers" class="anchor" href="#helpers"><span class="octicon octicon-link"></span></a>Helpers</h2>
+
+<p>This helper removes empty strings from the end of our text and code arrays so
+we're not left with extra newlines and things in between sections.</p>
+
+<pre><code>truncateEmpties = (array) -&gt;
+  while (last = array.last())? and last is ""
+    array.pop()
+
+  return array
+</code></pre>
+</body>
+</html>
