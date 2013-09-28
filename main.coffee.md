@@ -9,6 +9,7 @@ We use marked for generating the markdown.
 
     marked = require "./lib/marked"
     highlight = require "./lib/highlight"
+    languages = require "./languages"
 
     marked.setOptions
       highlight: (code, lang) ->
