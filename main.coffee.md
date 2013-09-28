@@ -15,7 +15,7 @@ We use marked for generating the markdown.
         if highlight.LANGUAGES[lang]
           highlight.highlight(lang, code).value
         else
-          console.warn "couldn't highlight code block with unknown language '#{lang}' in #{source}"
+          console.warn "couldn't highlight code block with unknown language '#{lang}'"
           
           code
 
@@ -46,9 +46,10 @@ Document one file.
 
         documentableFiles = Object.keys(source).select (name) ->
           name.extension() is "md"
-        
+          language = name.withoutExtension().extension()
+
         results = documentableFiles.map (name) ->
-          doctor.compile source[name].content
+          doctor.compile source[name].content, language
 
         index = []
 
