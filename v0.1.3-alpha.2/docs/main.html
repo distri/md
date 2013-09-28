@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>main</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    <ul class="sections">
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="like-a-doctor">Like a Doctor</h1>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Document all of your literate code: files that end in <code>.md</code>.</p>
+<p>Inspired by Docco. Designed for the browser environment.</p>
+<p>We use marked for generating the markdown.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">marked = require <span class="string">"./lib/marked"</span>
+highlight = require <span class="string">"./lib/highlight"</span>
+languages = require <span class="string">"./languages"</span>
+
+marked.setOptions
+  highlight: (code, lang) -&gt;
+    <span class="keyword">if</span> highlight.LANGUAGES[lang]
+      highlight.highlight(lang, code).value
+    <span class="keyword">else</span>
+      console.warn <span class="string">"couldn't highlight code block with unknown language '<span class="subst">#{lang}</span>'"</span>
+
+      code</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Export our public api.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">module.exports = doctor =
+  parse: require(<span class="string">'./parse'</span>)</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Our docco style template.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  template: require(<span class="string">'./template'</span>)</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Document one file.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  compile: (content, language=<span class="string">"coffeescript"</span>) -&gt;
+    doctor.parse(content).map ({text, code}) -&gt;
+      docsHtml: marked(text)
+      codeHtml: marked <span class="string">"```<span class="subst">#{language}</span>\n<span class="subst">#{code}</span>\n```"</span>
+
+  documentAll: (pkg) -&gt;
+    {entryPoint, source, repository} = pkg
+    {branch, default_branch} = repository
+
+    <span class="keyword">if</span> branch <span class="keyword">is</span> default_branch
+      base = <span class="string">"docs"</span>
+    <span class="keyword">else</span>
+      base = <span class="string">"<span class="subst">#{branch}</span>/docs"</span>
+
+    documentableFiles = Object.keys(source).select (name) -&gt;
+      name.extension() <span class="keyword">is</span> <span class="string">"md"</span>
+
+    results = documentableFiles.map (name) -&gt;
+      language = name.withoutExtension().extension()
+      language = languages[language] || language
+
+      doctor.compile source[name].content, language
+
+    index = []
+
+    results = results.map (result, i) -&gt;
+      <span class="comment"># Assuming .*.md so we should strip the extension twice</span>
+      name = documentableFiles[i].withoutExtension().withoutExtension()
+
+      <span class="comment"># TODO: Migrate Tempest and athletic-support into editor based projects.</span>
+
+      content = doctor.template
+        title: name
+        sections: result
+        scripts: <span class="string">"""
+          &lt;script src="//code.jquery.com/jquery-1.10.1.min.js"&gt;&lt;\/script&gt;
+          &lt;script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"&gt;&lt;\/script&gt;
+          &lt;script src="http://strd6.github.io/interactive/v0.7.0.js"&gt;&lt;\/script&gt;
+          &lt;script src="http://strd6.github.io/tempest/javascripts/envweb.js"&gt;&lt;\/script&gt;
+          &lt;script src="http://strd6.github.io/require/v0.1.0.js"&gt;&lt;\/script&gt;
+          &lt;srcipt&gt;
+            (function(pkg) {
+              // Expose a require for our package so scripts can access our modules
+              window.require = Require.generateFor(pkg);
+            })(<span class="subst">#{JSON.stringify(pkg, <span class="literal">null</span>, <span class="number">2</span>)}</span>);
+          &lt;\/script&gt;
+        """</span>
+
+      <span class="comment"># Add an index.html if our file is the entry point</span>
+      <span class="keyword">if</span> name <span class="keyword">is</span> entryPoint
+        index.push
+          path: <span class="string">"<span class="subst">#{base}</span>/index.html"</span>
+          content: content
+
+      path: <span class="string">"<span class="subst">#{base}</span>/<span class="subst">#{name}</span>.html"</span>
+      content: content
+    .concat(index)
+
+    Deferred().resolve(results)</code></pre>
+</div>
+        </li>
+        
+    </ul>
+  </div>
+  
+</body>
+</html>
