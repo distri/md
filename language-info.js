@@ -59,7 +59,7 @@
         content = doctor.template({
           title: name,
           sections: result,
-          scripts: ""
+          scripts: "<script src=\"//code.jquery.com/jquery-1.10.1.min.js\"><\/script>\n<script src=\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"><\/script>\n<script src=\"http://strd6.github.io/interactive/v0.7.0.js\"><\/script>"
         });
         if (name === entryPoint) {
           index.push({
