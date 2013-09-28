@@ -1,9 +1,11 @@
 (function() {
-  var doctor, highlight, marked;
+  var doctor, highlight, languages, marked;
 
   marked = require("./lib/marked");
 
   highlight = require("./lib/highlight");
+
+  languages = require("./languages");
 
   marked.setOptions({
     highlight: function(code, lang) {
@@ -47,6 +49,7 @@
       results = documentableFiles.map(function(name) {
         var language;
         language = name.withoutExtension().extension();
+        language = languages[language] || language;
         return doctor.compile(source[name].content, language);
       });
       index = [];
