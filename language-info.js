@@ -59,7 +59,7 @@
         content = doctor.template({
           title: name,
           sections: result,
-          scripts: "<script src=\"//code.jquery.com/jquery-1.10.1.min.js\"><\/script>\n<script src=\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"><\/script>\n<script src=\"http://strd6.github.io/interactive/v0.7.0.js\"><\/script>\n<script src=\"http://strd6.github.io/tempest/javascripts/envweb.js\"><\/script>\n<script src=\"http://strd6.github.io/require/v0.1.0.js\"><\/script>\n<srcipt>\n  (function(pkg) {\n    // Expose a require for our package so scripts can access our modules\n    window.require = Require.generateFor(pkg);\n  })(" + (JSON.stringify(pkg, null, 2)) + ");\n<\/script>"
+          scripts: "<script src=\"//code.jquery.com/jquery-1.10.1.min.js\"><\/script>\n<script src=\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"><\/script>\n<script src=\"http://strd6.github.io/interactive/v0.7.0.js\"><\/script>\n<script src=\"http://strd6.github.io/tempest/javascripts/envweb.js\"><\/script>\n<script src=\"http://strd6.github.io/require/v0.1.0.js\"><\/script>\n<script>\n  (function(pkg) {\n    // Expose a require for our package so scripts can access our modules\n    window.require = Require.generateFor(pkg);\n  })(" + (JSON.stringify(pkg, null, 2)) + ");\n<\/script>"
         });
         if (name === entryPoint) {
           index.push({
