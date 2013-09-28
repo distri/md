@@ -71,7 +71,7 @@ Document one file.
               <script src="http://strd6.github.io/interactive/v0.7.0.js"><\/script>
               <script src="http://strd6.github.io/tempest/javascripts/envweb.js"><\/script>
               <script src="http://strd6.github.io/require/v0.1.0.js"><\/script>
-              <srcipt>
+              <script>
                 (function(pkg) {
                   // Expose a require for our package so scripts can access our modules
                   window.require = Require.generateFor(pkg);
