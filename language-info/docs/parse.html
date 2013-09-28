@@ -1,165 +1,144 @@
+<!DOCTYPE html>
+
 <html>
 <head>
-<title>parse</title>
-<style>
-body{
-    margin: 0 auto;
-    font-family: Georgia, Palatino, serif;
-    color: #444444;
-    line-height: 1;
-    max-width: 960px;
-    padding: 30px;
-}
-h1, h2, h3, h4 {
-    color: #111111;
-    font-weight: 400;
-}
-h1, h2, h3, h4, h5, p {
-    margin-bottom: 24px;
-    padding: 0;
-}
-h1 {
-    font-size: 48px;
-}
-h2 {
-    font-size: 36px;
-    /* The bottom margin is small. It's designed to be used with gray meta text
-     * below a post title. */
-    margin: 24px 0 6px;
-}
-h3 {
-    font-size: 24px;
-}
-h4 {
-    font-size: 21px;
-}
-h5 {
-    font-size: 18px;
-}
-a {
-    color: #0099ff;
-    margin: 0;
-    padding: 0;
-    vertical-align: baseline;
-}
-a:hover {
-    text-decoration: none;
-    color: #ff6600;
-}
-a:visited {
-    color: purple;
-}
-ul, ol {
-    padding: 0;
-    margin: 0;
-}
-li {
-    line-height: 24px;
-}
-li ul, li ul {
-    margin-left: 24px;
-}
-p, ul, ol {
-    font-size: 16px;
-    line-height: 24px;
-    max-width: 540px;
-}
-pre {
-    padding: 0px 24px;
-    max-width: 800px;
-    white-space: pre-wrap;
-}
-code {
-    font-family: Consolas, Monaco, Andale Mono, monospace;
-    line-height: 1.5;
-    font-size: 13px;
-}
-aside {
-    display: block;
-    float: right;
-    width: 390px;
-}
-blockquote {
-    border-left:.5em solid #eee;
-    padding: 0 2em;
-    margin-left:0;
-    max-width: 476px;
-}
-blockquote  cite {
-    font-size:14px;
-    line-height:20px;
-    color:#bfbfbf;
-}
-blockquote cite:before {
-    content: '\2014 \00A0';
-}
-
-blockquote p {  
-    color: #666;
-    max-width: 460px;
-}
-hr {
-    width: 540px;
-    text-align: left;
-    margin: 0 auto 0 0;
-    color: #999;
-}
-</style>
+  <title>parse</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
 </head>
 <body>
-<h1>
-<a name="parse" class="anchor" href="#parse"><span class="octicon octicon-link"></span></a>Parse</h1>
+  <div id="container">
+    <div id="background"></div>
+    <ul class="sections">
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="parse">Parse</h1>
 
-<p>Parse a Markdown document into an array of sections that contain code and text.</p>
+            </div>
+            <div class="content"><pre><code class="lang-coffee">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Parse a Markdown document into an array of sections that contain code and text.</p>
+<h2 id="implementation">Implementation</h2>
 
-<h2>
-<a name="implementation" class="anchor" href="#implementation"><span class="octicon octicon-link"></span></a>Implementation</h2>
+            </div>
+            <div class="content"><pre><code class="lang-coffee">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>RegExes for detecting indentation, blank lines, and section breaks.</p>
 
-<p>RegExes for detecting indentation, blank lines, and section breaks.</p>
-
-<pre><code>indent = /^([ ]{4}|\t)/
+            </div>
+            <div class="content"><pre><code class="lang-coffee">indent = /^([ ]{4}|\t)/
 blank = /^\s*$/
-sectionBreak = /^(---+|===+)$/
-</code></pre>
+sectionBreak = /^(---+|===+)$/</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Parsing converts a string of Markdown text into an array of sections.</p>
 
-<p>Parsing converts a string of Markdown text into an array of sections.</p>
+            </div>
+            <div class="content"><pre><code class="lang-coffee">parse = (source) -&gt;</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>A helper to create section objects. Each section contains text and code.</p>
 
-<pre><code>parse = (source) -&gt;
-</code></pre>
-
-<p>A helper to create section objects. Each section contains text and code.</p>
-
-<pre><code>  Section = -&gt;
+            </div>
+            <div class="content"><pre><code class="lang-coffee">  Section = -&gt;
     text: []
-    code: []
-</code></pre>
+    code: []</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Our array of sections that we will return.</p>
 
-<p>Our array of sections that we will return.</p>
+            </div>
+            <div class="content"><pre><code class="lang-coffee">  sections = [Section()]</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>A helper to get the last section in the array.</p>
 
-<pre><code>  sections = [Section()]
-</code></pre>
+            </div>
+            <div class="content"><pre><code class="lang-coffee">  lastSection = -&gt;
+    sections.last()</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Whenever we encounter code we push it onto the last section.</p>
 
-<p>A helper to get the last section in the array.</p>
-
-<pre><code>  lastSection = -&gt;
-    sections.last()
-</code></pre>
-
-<p>Whenever we encounter code we push it onto the last section.</p>
-
-<pre><code>  pushCode = (code) -&gt;
-    lastSection().code.push code
-</code></pre>
-
-<p>Pushing text is a little bit more complicated. If the last section has code in
+            </div>
+            <div class="content"><pre><code class="lang-coffee">  pushCode = (code) -&gt;
+    lastSection().code.push code</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Pushing text is a little bit more complicated. If the last section has code in
 it then we need to push a new section on and add the text to that.</p>
-
-<p>If the last section is doesn't have any code yet we can push our text onto it.</p>
-
+<p>If the last section is doesn&#39;t have any code yet we can push our text onto it.</p>
 <p>If our text matches a <code>sectionbreak</code> then we push a new section after adding
 our text to the previous section.</p>
 
-<pre><code>  pushText = (text) -&gt;
+            </div>
+            <div class="content"><pre><code class="lang-coffee">  pushText = (text) -&gt;
     if lastSection().code.length
       section = Section()
       section.text.push text
@@ -171,13 +150,13 @@ our text to the previous section.</p>
 
   pushEmpty = -&gt;
     if lastWasCode
-      pushCode("")
+      pushCode(&quot;&quot;)
     else
-      lastSection().text.push ""
+      lastSection().text.push &quot;&quot;
 
   lastWasCode = false
 
-  source.split("\n").each (line) -&gt;
+  source.split(&quot;\n&quot;).each (line) -&gt;
     if blank.exec(line)
       pushEmpty()
     else if match = indent.exec(line)
@@ -188,23 +167,47 @@ our text to the previous section.</p>
       pushText line
 
   sections.each (section) -&gt;       
-    section.text = truncateEmpties(section.text).join("\n")
-    section.code = truncateEmpties(section.code).join("\n")
+    section.text = truncateEmpties(section.text).join(&quot;\n&quot;)
+    section.code = truncateEmpties(section.code).join(&quot;\n&quot;)
 
-module.exports = parse
+module.exports = parse</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h2 id="helpers">Helpers</h2>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffee">
 </code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>This helper removes empty strings from the end of our text and code arrays so
+we&#39;re not left with extra newlines and things in between sections.</p>
 
-<h2>
-<a name="helpers" class="anchor" href="#helpers"><span class="octicon octicon-link"></span></a>Helpers</h2>
-
-<p>This helper removes empty strings from the end of our text and code arrays so
-we're not left with extra newlines and things in between sections.</p>
-
-<pre><code>truncateEmpties = (array) -&gt;
-  while (last = array.last())? and last is ""
+            </div>
+            <div class="content"><pre><code class="lang-coffee">truncateEmpties = (array) -&gt;
+  while (last = array.last())? and last is &quot;&quot;
     array.pop()
 
-  return array
-</code></pre>
+  return array</code></pre>
+</div>
+        </li>
+        
+    </ul>
+  </div>
+  
 </body>
 </html>
