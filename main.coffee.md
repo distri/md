@@ -59,7 +59,9 @@ Document one file.
         results = results.map (result, i) ->
           # Assuming .*.md so we should strip the extension twice
           name = documentableFiles[i].withoutExtension().withoutExtension()
-          
+
+          # TODO: Migrate Tempest and athletic-support into editor based projects.
+
           content = doctor.template
             title: name
             sections: result
@@ -67,6 +69,14 @@ Document one file.
               <script src="//code.jquery.com/jquery-1.10.1.min.js"><\/script>
               <script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"><\/script>
               <script src="http://strd6.github.io/interactive/v0.7.0.js"><\/script>
+              <script src="http://strd6.github.io/tempest/javascripts/envweb.js"><\/script>
+              <script src="http://strd6.github.io/require/v0.1.0.js"><\/script>
+              <srcipt>
+                (function(pkg) {
+                  // Expose a require for our package so scripts can access our modules
+                  window.require = Require.generateFor(pkg);
+                })(#{JSON.stringify(pkg, null, 2)});
+              <\/script>
             """
 
           # Add an index.html if our file is the entry point
