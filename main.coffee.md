@@ -63,7 +63,11 @@ Document one file.
           content = doctor.template
             title: name
             sections: result
-            scripts: ""
+            scripts: """
+              <script src="//code.jquery.com/jquery-1.10.1.min.js"><\/script>
+              <script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"><\/script>
+              <script src="http://strd6.github.io/interactive/v0.7.0.js"><\/script>
+            """
 
           # Add an index.html if our file is the entry point
           if name is entryPoint
