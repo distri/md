@@ -42,11 +42,11 @@
         base = "" + branch + "/docs";
       }
       documentableFiles = Object.keys(source).select(function(name) {
-        var language;
-        name.extension() === "md";
-        return language = name.withoutExtension().extension();
+        return name.extension() === "md";
       });
       results = documentableFiles.map(function(name) {
+        var language;
+        language = name.withoutExtension().extension();
         return doctor.compile(source[name].content, language);
       });
       index = [];
