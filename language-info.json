@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.3-alpha.1",
   "source": {
     "LICENSE": {
       "path": "LICENSE",
@@ -46,7 +46,7 @@
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.1.2\"\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/master.js\"\n]\n",
+      "content": "version: \"0.1.3-alpha.1\"\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/master.js\"\n]\n",
       "type": "blob"
     },
     "style/markdown.css": {
@@ -218,7 +218,7 @@
       "pull": true
     },
     "network_count": 0,
-    "branch": "language-info",
+    "branch": "v0.1.3-alpha.0",
     "defaultBranch": "master",
     "includedModules": [
       "Bindable"
