@@ -21,7 +21,7 @@
               <h1 id="like-a-doctor">Like a Doctor</h1>
 
             </div>
-            <div class="content"><pre><code class="lang-coffee">
+            <div class="content"><pre><code class="lang-coffeescript">
 </code></pre>
 </div>
         </li>
@@ -37,16 +37,16 @@
 <p>We use marked for generating the markdown.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffee">marked = require &quot;./lib/marked&quot;
-highlight = require &quot;./lib/highlight&quot;
-languages = require &quot;./languages&quot;
+            <div class="content"><pre><code class="lang-coffeescript">marked = require <span class="string">"./lib/marked"</span>
+highlight = require <span class="string">"./lib/highlight"</span>
+languages = require <span class="string">"./languages"</span>
 
 marked.setOptions
   highlight: (code, lang) -&gt;
-    if highlight.LANGUAGES[lang]
+    <span class="keyword">if</span> highlight.LANGUAGES[lang]
       highlight.highlight(lang, code).value
-    else
-      console.warn &quot;couldn&#39;t highlight code block with unknown language &#39;#{lang}&#39;&quot;
+    <span class="keyword">else</span>
+      console.warn <span class="string">"couldn't highlight code block with unknown language '<span class="subst">#{lang}</span>'"</span>
 
       code</code></pre>
 </div>
@@ -61,8 +61,8 @@ marked.setOptions
               <p>Export our public api.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffee">module.exports = doctor =
-  parse: require(&#39;./parse&#39;)</code></pre>
+            <div class="content"><pre><code class="lang-coffeescript">module.exports = doctor =
+  parse: require(<span class="string">'./parse'</span>)</code></pre>
 </div>
         </li>
         
@@ -75,7 +75,7 @@ marked.setOptions
               <p>Our docco style template.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffee">  template: require(&#39;./template&#39;)</code></pre>
+            <div class="content"><pre><code class="lang-coffeescript">  template: require(<span class="string">'./template'</span>)</code></pre>
 </div>
         </li>
         
@@ -88,22 +88,22 @@ marked.setOptions
               <p>Document one file.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffee">  compile: (content, language=&quot;coffeescript&quot;) -&gt;
+            <div class="content"><pre><code class="lang-coffeescript">  compile: (content, language=<span class="string">"coffeescript"</span>) -&gt;
     doctor.parse(content).map ({text, code}) -&gt;
       docsHtml: marked(text)
-      codeHtml: marked &quot;```#{language}\n#{code}\n```&quot;
+      codeHtml: marked <span class="string">"```<span class="subst">#{language}</span>\n<span class="subst">#{code}</span>\n```"</span>
 
   documentAll: (pkg) -&gt;
     {entryPoint, source, repository} = pkg
     {branch, default_branch} = repository
 
-    if branch is default_branch
-      base = &quot;docs&quot;
-    else
-      base = &quot;#{branch}/docs&quot;
+    <span class="keyword">if</span> branch <span class="keyword">is</span> default_branch
+      base = <span class="string">"docs"</span>
+    <span class="keyword">else</span>
+      base = <span class="string">"<span class="subst">#{branch}</span>/docs"</span>
 
     documentableFiles = Object.keys(source).select (name) -&gt;
-      name.extension() is &quot;md&quot;
+      name.extension() <span class="keyword">is</span> <span class="string">"md"</span>
 
     results = documentableFiles.map (name) -&gt;
       language = name.withoutExtension().extension()
@@ -114,21 +114,25 @@ marked.setOptions
     index = []
 
     results = results.map (result, i) -&gt;
-      # Assuming .*.md so we should strip the extension twice
+      <span class="comment"># Assuming .*.md so we should strip the extension twice</span>
       name = documentableFiles[i].withoutExtension().withoutExtension()
 
       content = doctor.template
         title: name
         sections: result
-        scripts: &quot;&quot;
+        scripts: <span class="string">"""
+          &lt;script src="//code.jquery.com/jquery-1.10.1.min.js"&gt;&lt;\/script&gt;
+          &lt;script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"&gt;&lt;\/script&gt;
+          &lt;script src="http://strd6.github.io/interactive/v0.7.0.js"&gt;&lt;\/script&gt;
+        """</span>
 
-      # Add an index.html if our file is the entry point
-      if name is entryPoint
+      <span class="comment"># Add an index.html if our file is the entry point</span>
+      <span class="keyword">if</span> name <span class="keyword">is</span> entryPoint
         index.push
-          path: &quot;#{base}/index.html&quot;
+          path: <span class="string">"<span class="subst">#{base}</span>/index.html"</span>
           content: content
 
-      path: &quot;#{base}/#{name}.html&quot;
+      path: <span class="string">"<span class="subst">#{base}</span>/<span class="subst">#{name}</span>.html"</span>
       content: content
     .concat(index)
 
