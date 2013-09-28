@@ -46,9 +46,10 @@ Document one file.
 
         documentableFiles = Object.keys(source).select (name) ->
           name.extension() is "md"
+          
+        results = documentableFiles.map (name) ->
           language = name.withoutExtension().extension()
 
-        results = documentableFiles.map (name) ->
           doctor.compile source[name].content, language
 
         index = []
