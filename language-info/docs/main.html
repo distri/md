@@ -158,9 +158,10 @@ marked.setOptions
 
     documentableFiles = Object.keys(source).select (name) -&gt;
       name.extension() is "md"
-      language = name.withoutExtension().extension()
 
     results = documentableFiles.map (name) -&gt;
+      language = name.withoutExtension().extension()
+
       doctor.compile source[name].content, language
 
     index = []
