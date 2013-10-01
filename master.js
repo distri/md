@@ -1,5 +1,5 @@
 (function() {
-  var doctor, highlight, languages, marked;
+  var dependencyScripts, doctor, highlight, languages, makeScript, marked, unique;
 
   marked = require("./lib/marked");
 
@@ -35,7 +35,7 @@
       });
     },
     documentAll: function(pkg) {
-      var base, branch, default_branch, documentableFiles, entryPoint, index, repository, results, source;
+      var base, branch, default_branch, documentableFiles, entryPoint, index, repository, results, scripts, source;
       entryPoint = pkg.entryPoint, source = pkg.source, repository = pkg.repository;
       branch = repository.branch, default_branch = repository.default_branch;
       if (branch === default_branch) {
@@ -53,13 +53,14 @@
         return doctor.compile(source[name].content, language);
       });
       index = [];
+      scripts = dependencyScripts(unique(["//code.jquery.com/jquery-1.10.1.min.js", "//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js", "http://strd6.github.io/interactive/v0.8.0.js", "http://strd6.github.io/require/v0.2.1.js"].concat(pkg.remoteDependencies || [])));
       results = results.map(function(result, i) {
         var content, name;
         name = documentableFiles[i].withoutExtension().withoutExtension();
         content = doctor.template({
           title: name,
           sections: result,
-          scripts: "<script src=\"//code.jquery.com/jquery-1.10.1.min.js\"><\/script>\n<script src=\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"><\/script>\n<script src=\"http://strd6.github.io/interactive/v0.7.0.js\"><\/script>\n<script src=\"http://strd6.github.io/tempest/javascripts/envweb.js\"><\/script>\n<script src=\"http://strd6.github.io/require/v0.1.0.js\"><\/script>\n<script>\n  (function(pkg) {\n    // Expose a require for our package so scripts can access our modules\n    window.require = Require.generateFor(pkg);\n  })(" + (JSON.stringify(pkg, null, 2)) + ");\n<\/script>"
+          scripts: "" + scripts + "\n<script>\n  (function(pkg) {\n    // Expose a require for our package so scripts can access our modules\n    window.require = Require.generateFor(pkg);\n  })(" + (JSON.stringify(pkg, null, 2)) + ");\n<\/script>"
         });
         if (name === entryPoint) {
           index.push({
@@ -74,6 +75,29 @@
       }).concat(index);
       return Deferred().resolve(results);
     }
+  };
+
+  makeScript = function(src) {
+    var script;
+    script = document.createElement("script");
+    script.src = src;
+    return script.outerHTML;
+  };
+
+  dependencyScripts = function(remoteDependencies) {
+    if (remoteDependencies == null) {
+      remoteDependencies = [];
+    }
+    return remoteDependencies.map(makeScript).join("\n");
+  };
+
+  unique = function(array) {
+    return array.reduce(function(results, item) {
+      if (results.indexOf(item) === -1) {
+        results.push(item);
+      }
+      return results;
+    }, []);
   };
 
 }).call(this);
