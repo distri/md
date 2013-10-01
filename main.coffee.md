@@ -118,7 +118,7 @@ the dependencies of this build.
 
     unique = (array) ->
       array.reduce (results, item) ->
-        results.push item if results.indexOf item is -1
+        results.push item if results.indexOf(item) is -1
 
         results
       , []
