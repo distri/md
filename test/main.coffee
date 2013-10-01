@@ -5,7 +5,7 @@ highlight = require "../lib/highlight"
 describe "marked markdown generation", ->
   it "should compile markdown", ->
     assert marked 'I am using __markdown__.'
-    
+
 describe "hightlight.js", ->
   it "highlight stuff", ->
     assert highlight
@@ -89,5 +89,4 @@ describe "documenting a file package", ->
         "main.coffee.md": 
           content: "Yolo is a lifestyle choice\n    alert 'wat'"
     ).then (results) ->
-      console.log results
       done()
