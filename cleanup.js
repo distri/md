@@ -93,7 +93,7 @@
 
   unique = function(array) {
     return array.reduce(function(results, item) {
-      if (results.indexOf(item === -1)) {
+      if (results.indexOf(item) === -1) {
         results.push(item);
       }
       return results;
