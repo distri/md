@@ -62,8 +62,8 @@ promise that will be fulfilled with an array of `fileData`.
         scripts = dependencyScripts unique([
           "//code.jquery.com/jquery-1.10.1.min.js"
           "//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"
-          "http://strd6.github.io/interactive/v0.8.0.js"
           "http://strd6.github.io/require/v0.2.1.js"
+          "http://strd6.github.io/interactive/v0.8.0.js"
         ].concat(
           pkg.remoteDependencies or []
         ))
