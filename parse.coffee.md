@@ -72,7 +72,7 @@ our text to the previous section.
           lastWasCode = false
           pushText line
 
-      sections.each (section) ->       
+      sections.each (section) ->
         section.text = truncateEmpties(section.text).join("\n")
         section.code = truncateEmpties(section.code).join("\n")
 
@@ -87,5 +87,5 @@ we're not left with extra newlines and things in between sections.
     truncateEmpties = (array) ->
       while (last = array.last())? and last is ""
         array.pop()
-      
+
       return array
