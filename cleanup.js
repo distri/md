@@ -53,7 +53,7 @@
         return doctor.compile(source[name].content, language);
       });
       index = [];
-      scripts = dependencyScripts(unique(["//code.jquery.com/jquery-1.10.1.min.js", "http://strd6.github.io/interactive/v0.8.0.js", "http://strd6.github.io/require/v0.2.0.js"].concat(pkg.remoteDependencies || [])));
+      scripts = dependencyScripts(unique(["//code.jquery.com/jquery-1.10.1.min.js", "http://strd6.github.io/interactive/v0.8.0.js", "http://strd6.github.io/require/v0.2.1.js"].concat(pkg.remoteDependencies || [])));
       results = results.map(function(result, i) {
         var content, name;
         name = documentableFiles[i].withoutExtension().withoutExtension();
