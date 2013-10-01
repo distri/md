@@ -3,7 +3,7 @@ Stole the template from Docco parallel style.
 
     template = _.template """
       <!DOCTYPE html>
-      
+
       <html>
       <head>
         <title><%= title %></title>

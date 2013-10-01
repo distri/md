@@ -17,7 +17,7 @@ We use marked for generating the markdown.
           highlight.highlight(lang, code).value
         else
           console.warn "couldn't highlight code block with unknown language '#{lang}'"
-          
+
           code
 
 Export our public api.
@@ -35,6 +35,9 @@ Document one file.
         doctor.parse(content).map ({text, code}) ->
           docsHtml: marked(text)
           codeHtml: marked "```#{language}\n#{code}\n```"
+
+Generate the documentation for all files within the given package. Returns a
+promise that will be fulfilled with an array of `fileData`.
 
       documentAll: (pkg) ->
         {entryPoint, source, repository} = pkg
@@ -55,22 +58,24 @@ Document one file.
           doctor.compile source[name].content, language
 
         index = []
+        
+        scripts = dependencyScripts unique([
+          "//code.jquery.com/jquery-1.10.1.min.js"
+          "http://strd6.github.io/interactive/v0.8.0.js"
+          "http://strd6.github.io/require/v0.2.1.js"
+        ].concat(
+          pkg.remoteDependencies or []
+        ))
 
         results = results.map (result, i) ->
           # Assuming .*.md so we should strip the extension twice
           name = documentableFiles[i].withoutExtension().withoutExtension()
 
-          # TODO: Migrate Tempest and athletic-support into editor based projects.
-
           content = doctor.template
             title: name
             sections: result
             scripts: """
-              <script src="//code.jquery.com/jquery-1.10.1.min.js"><\/script>
-              <script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"><\/script>
-              <script src="http://strd6.github.io/interactive/v0.7.0.js"><\/script>
-              <script src="http://strd6.github.io/tempest/javascripts/envweb.js"><\/script>
-              <script src="http://strd6.github.io/require/v0.1.0.js"><\/script>
+              #{scripts}
               <script>
                 (function(pkg) {
                   // Expose a require for our package so scripts can access our modules
@@ -90,3 +95,30 @@ Document one file.
         .concat(index)
 
         Deferred().resolve(results)
+
+Helpers
+-------
+
+`makeScript` returns a string representation of a script tag that has a src
+attribute.
+
+    makeScript = (src) ->
+      script = document.createElement("script")
+      script.src = src
+
+      return script.outerHTML
+
+`dependencyScripts` returns a string containing the script tags that are
+the dependencies of this build.
+
+    dependencyScripts = (remoteDependencies=[]) ->
+      remoteDependencies.map(makeScript).join("\n")
+
+`unique` returns a new duplicate free version of an array.
+
+    unique = (array) ->
+      array.reduce (results, item) ->
+        results.push item if results.indexOf(item) is -1
+
+        results
+      , []
