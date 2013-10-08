@@ -57,13 +57,14 @@ promise that will be fulfilled with an array of `fileData`.
 
           doctor.compile source[name].content, language
 
-        index = []
+        extras = [packageScript(base)]
 
         scripts = dependencyScripts unique([
           "//code.jquery.com/jquery-1.10.1.min.js"
           "//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"
-          "http://strd6.github.io/require/v0.2.1.js"
+          "http://strd6.github.io/require/v0.2.2.js"
           "http://strd6.github.io/interactive/v0.8.0.js"
+          "package.js"
         ].concat(
           pkg.remoteDependencies or []
         ))
@@ -75,25 +76,17 @@ promise that will be fulfilled with an array of `fileData`.
           content = doctor.template
             title: name
             sections: result
-            scripts: """
-              #{scripts}
-              <script>
-                (function(pkg) {
-                  // Expose a require for our package so scripts can access our modules
-                  window.require = Require.generateFor(pkg);
-                })(#{JSON.stringify(pkg, null, 2)});
-              <\/script>
-            """
+            scripts:  scripts
 
           # Add an index.html if our file is the entry point
           if name is entryPoint
-            index.push
+            extras.push
               path: "#{base}/index.html"
               content: content
 
           path: "#{base}/#{name}.html"
           content: content
-        .concat(index)
+        .concat(extras)
 
         Deferred().resolve(results)
 
@@ -123,3 +116,15 @@ the dependencies of this build.
 
         results
       , []
+
+This returns a script file that exposes a global `require` that gives access to
+the current package and is meant to be included in every docs page.
+
+    packageScript = (base) ->
+      path: "#{base}/package.js"
+      content: """
+        (function(pkg) {
+          // Expose a require for our package so scripts can access our modules
+          window.require = Require.generateFor(pkg);
+        })(#{JSON.stringify(pkg, null, 2)});
+      """
