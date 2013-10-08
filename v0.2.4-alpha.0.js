@@ -52,7 +52,7 @@
         language = languages[language] || language;
         return doctor.compile(source[name].content, language);
       });
-      extras = [packageScript(base)];
+      extras = [packageScript(base, pkg)];
       scripts = dependencyScripts(unique(["//code.jquery.com/jquery-1.10.1.min.js", "//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js", "http://strd6.github.io/require/v0.2.2.js", "http://strd6.github.io/interactive/v0.8.0.js", "package.js"].concat(pkg.remoteDependencies || [])));
       results = results.map(function(result, i) {
         var content, name;
@@ -100,7 +100,7 @@
     }, []);
   };
 
-  packageScript = function(base) {
+  packageScript = function(base, pkg) {
     return {
       path: "" + base + "/package.js",
       content: "(function(pkg) {\n  // Expose a require for our package so scripts can access our modules\n  window.require = Require.generateFor(pkg);\n})(" + (JSON.stringify(pkg, null, 2)) + ");"
