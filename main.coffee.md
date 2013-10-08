@@ -57,7 +57,7 @@ promise that will be fulfilled with an array of `fileData`.
 
           doctor.compile source[name].content, language
 
-        extras = [packageScript(base)]
+        extras = [packageScript(base, pkg)]
 
         scripts = dependencyScripts unique([
           "//code.jquery.com/jquery-1.10.1.min.js"
@@ -120,7 +120,7 @@ the dependencies of this build.
 This returns a script file that exposes a global `require` that gives access to
 the current package and is meant to be included in every docs page.
 
-    packageScript = (base) ->
+    packageScript = (base, pkg) ->
       path: "#{base}/package.js"
       content: """
         (function(pkg) {
