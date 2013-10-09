@@ -1,5 +1,5 @@
 (function() {
-  var dependencyScripts, doctor, highlight, languages, makeScript, marked, packageScript, unique;
+  var dependencyScripts, doctor, highlight, languages, makeScript, marked, packageScript, relativeScriptPath, unique;
 
   marked = require("./lib/marked");
 
@@ -53,14 +53,14 @@
         return doctor.compile(source[name].content, language);
       });
       extras = [packageScript(base, pkg)];
-      scripts = dependencyScripts(unique(["//code.jquery.com/jquery-1.10.1.min.js", "//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js", "http://strd6.github.io/require/v0.2.2.js", "http://strd6.github.io/interactive/v0.8.0.js", "package.js"].concat(pkg.remoteDependencies || [])));
+      scripts = dependencyScripts(unique(["//code.jquery.com/jquery-1.10.1.min.js", "//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js", "http://strd6.github.io/require/v0.2.2.js", "http://strd6.github.io/interactive/v0.8.0.js"].concat(pkg.remoteDependencies || [])));
       results = results.map(function(result, i) {
         var content, name;
         name = documentableFiles[i].withoutExtension().withoutExtension();
         content = doctor.template({
           title: name,
           sections: result,
-          scripts: scripts
+          scripts: scripts.concat(relativeScriptPath(name))
         });
         if (name === entryPoint) {
           extras.push({
@@ -105,6 +105,16 @@
       path: "" + base + "/package.js",
       content: "(function(pkg) {\n  // Expose a require for our package so scripts can access our modules\n  window.require = Require.generateFor(pkg);\n})(" + (JSON.stringify(pkg, null, 2)) + ");"
     };
+  };
+
+  relativeScriptPath = function(path) {
+    var results, upOne;
+    upOne = "../";
+    results = [];
+    (path.split("/").length - 1).times(function() {
+      return results.push(upOne);
+    });
+    return results.concat("package.json").join("");
   };
 
 }).call(this);
