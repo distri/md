@@ -64,7 +64,6 @@ promise that will be fulfilled with an array of `fileData`.
           "//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"
           "http://strd6.github.io/require/v0.2.2.js"
           "http://strd6.github.io/interactive/v0.8.0.js"
-          "package.js"
         ].concat(
           pkg.remoteDependencies or []
         ))
@@ -76,7 +75,7 @@ promise that will be fulfilled with an array of `fileData`.
           content = doctor.template
             title: name
             sections: result
-            scripts:  scripts
+            scripts:  scripts.concat relativeScriptPath(name)
 
           # Add an index.html if our file is the entry point
           if name is entryPoint
@@ -128,3 +127,15 @@ the current package and is meant to be included in every docs page.
           window.require = Require.generateFor(pkg);
         })(#{JSON.stringify(pkg, null, 2)});
       """
+
+Package Script path
+
+    relativeScriptPath = (path) ->
+      upOne = "../"
+      results = []
+
+      (path.split("/").length - 1).times ->
+        results.push upOne
+        
+      results.concat("package.json").join("")
+  
