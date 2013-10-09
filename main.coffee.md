@@ -85,9 +85,8 @@ promise that will be fulfilled with an array of `fileData`.
 
           path: "#{base}/#{name}.html"
           content: content
-        .concat(extras)
 
-        Deferred().resolve(results)
+        Deferred().resolve(extras.concat(results))
 
 Helpers
 -------
