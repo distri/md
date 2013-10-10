@@ -75,7 +75,7 @@ promise that will be fulfilled with an array of `fileData`.
           content = doctor.template
             title: name
             sections: result
-            scripts:  scripts.concat makeScript(relativeScriptPath(name))
+            scripts:  [].concat makeScript(relativeScriptPath(name)), scripts
 
           # Add an index.html if our file is the entry point
           if name is entryPoint
@@ -135,6 +135,5 @@ Package Script path
 
       (path.split("/").length - 1).times ->
         results.push upOne
-        
+
       results.concat("package.js").join("")
-  
