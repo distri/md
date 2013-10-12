@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>parse</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    <ul class="sections">
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="parse">Parse</h1>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Parse a Markdown document into an array of sections that contain code and text.</p>
+<h2 id="implementation">Implementation</h2>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>RegExes for detecting indentation, blank lines, and section breaks.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">indent = <span class="regexp">/^([ ]{4}|\t)/</span>
+blank = <span class="regexp">/^\s*$/</span>
+sectionBreak = <span class="regexp">/^(---+|===+)$/</span></code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Parsing converts a string of Markdown text into an array of sections.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">parse</span></span> = (source) -&gt;</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>A helper to create section objects. Each section contains text and code.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  <span class="function"><span class="title">Section</span></span> = -&gt;
+    text: []
+    code: []</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Our array of sections that we will return.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  sections = [Section()]</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>A helper to get the last section in the array.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  <span class="function"><span class="title">lastSection</span></span> = -&gt;
+    sections.last()</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Whenever we encounter code we push it onto the last section.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  <span class="function"><span class="title">pushCode</span></span> = (code) -&gt;
+    lastSection().code.push code</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Pushing text is a little bit more complicated. If the last section has code in
+it then we need to push a new section on and add the text to that.</p>
+<p>If the last section is doesn&#39;t have any code yet we can push our text onto it.</p>
+<p>If our text matches a <code>sectionbreak</code> then we push a new section after adding
+our text to the previous section.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  <span class="function"><span class="title">pushText</span></span> = (text) -&gt;
+    <span class="keyword">if</span> lastSection().code.length
+      section = Section()
+      section.text.push text
+      sections.push section
+    <span class="keyword">else</span>
+      lastSection().text.push text
+
+      sections.push Section() <span class="keyword">if</span> sectionBreak.test text
+
+  <span class="function"><span class="title">pushEmpty</span></span> = -&gt;
+    <span class="keyword">if</span> lastWasCode
+      pushCode(<span class="string">""</span>)
+    <span class="keyword">else</span>
+      lastSection().text.push <span class="string">""</span>
+
+  lastWasCode = <span class="literal">false</span>
+
+  source.split(<span class="string">"\n"</span>).each (line) -&gt;
+    <span class="keyword">if</span> blank.exec(line)
+      pushEmpty()
+    <span class="keyword">else</span> <span class="keyword">if</span> match = indent.exec(line)
+      lastWasCode = <span class="literal">true</span>
+      pushCode line[match[<span class="number">0</span>].length..]
+    <span class="keyword">else</span>
+      lastWasCode = <span class="literal">false</span>
+      pushText line
+
+  sections.each (section) -&gt;
+    section.text = truncateEmpties(section.text).join(<span class="string">"\n"</span>)
+    section.code = truncateEmpties(section.code).join(<span class="string">"\n"</span>)
+
+module.exports = parse</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h2 id="helpers">Helpers</h2>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>This helper removes empty strings from the end of our text and code arrays so
+we&#39;re not left with extra newlines and things in between sections.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">truncateEmpties</span></span> = (array) -&gt;
+  <span class="keyword">while</span> (last = array.last())? <span class="keyword">and</span> last <span class="keyword">is</span> <span class="string">""</span>
+    array.pop()
+
+  <span class="keyword">return</span> array</code></pre>
+</div>
+        </li>
+        
+    </ul>
+  </div>
+  <script src="package.js"></script>,<script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+<script src="http://strd6.github.io/require/v0.2.2.js"></script>
+<script src="http://strd6.github.io/interactive/v0.8.0.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="http://strd6.github.io/tempest/javascripts/envweb.js"></script>
+</body>
+</html>
