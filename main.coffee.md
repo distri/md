@@ -63,10 +63,12 @@ promise that will be fulfilled with an array of `fileData`.
           "//code.jquery.com/jquery-1.10.1.min.js"
           "//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"
           "http://strd6.github.io/require/v0.2.2.js"
-          "http://strd6.github.io/interactive/v0.8.1.js"
         ].concat(
           pkg.remoteDependencies or []
         ))
+        
+        # Add interactive loader to scripts string
+        scripts += interactiveLoader
 
         results = results.map (result, i) ->
           # Assuming .*.md so we should strip the extension twice
@@ -90,6 +92,18 @@ promise that will be fulfilled with an array of `fileData`.
 
 Helpers
 -------
+
+    interactiveLoader =
+      """
+        $.ajax({
+          url: "http://strd6.github.io/interactive/v0.8.1.jsonp"
+          dataType: "jsonp"
+          jsonpCallback: "STRd6/interactive:v0.8.1"
+          cache: true
+        }).then(function(PACKAGE) {
+          Require.generateFor(PACKAGE)("./" + PACKAGE.entryPoint)
+        })
+      """
 
 `makeScript` returns a string representation of a script tag that has a src
 attribute.
