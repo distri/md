@@ -95,14 +95,16 @@ Helpers
 
     interactiveLoader =
       """
-        $.ajax({
-          url: "http://strd6.github.io/interactive/v0.8.1.jsonp"
-          dataType: "jsonp"
-          jsonpCallback: "STRd6/interactive:v0.8.1"
-          cache: true
-        }).then(function(PACKAGE) {
-          Require.generateFor(PACKAGE)("./" + PACKAGE.entryPoint)
-        })
+        <script>
+          $.ajax({
+            url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
+            dataType: "jsonp",
+            jsonpCallback: "STRd6/interactive:v0.8.1",
+            cache: true
+          }).then(function(PACKAGE) {
+            Require.generateFor(PACKAGE)("./" + PACKAGE.entryPoint)
+          })
+        <\/script>
       """
 
 `makeScript` returns a string representation of a script tag that has a src
