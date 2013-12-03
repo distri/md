@@ -1,5 +1,5 @@
-version: "0.3.0"
+version: "0.3.1"
 remoteDependencies: [
-  "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"
+  "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"
   "http://strd6.github.io/tempest/javascripts/envweb.js"
 ]
