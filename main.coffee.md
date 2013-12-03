@@ -66,7 +66,7 @@ promise that will be fulfilled with an array of `fileData`.
         ].concat(
           pkg.remoteDependencies or []
         ))
-        
+
         # Add interactive loader to scripts string
         scripts += interactiveLoader
 
@@ -82,11 +82,15 @@ promise that will be fulfilled with an array of `fileData`.
           # Add an index.html if our file is the entry point
           if name is entryPoint
             extras.push
-              path: "#{base}/index.html"
               content: content
+              mode: "100644"
+              path: "#{base}/index.html"
+              type: "blob"
 
-          path: "#{base}/#{name}.html"
           content: content
+          mode: "100644"
+          path: "#{base}/#{name}.html"
+          type: "blob"
 
         Deferred().resolve(extras.concat(results))
 
@@ -135,13 +139,15 @@ This returns a script file that exposes a global `require` that gives access to
 the current package and is meant to be included in every docs page.
 
     packageScript = (base, pkg) ->
-      path: "#{base}/package.js"
       content: """
         (function(pkg) {
           // Expose a require for our package so scripts can access our modules
           window.require = Require.generateFor(pkg);
         })(#{JSON.stringify(pkg, null, 2)});
       """
+      mode: "100644"
+      path: "#{base}/package.js"
+      type: "blob"
 
 Package Script path
 
