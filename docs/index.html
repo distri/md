@@ -148,11 +148,15 @@ promise that will be fulfilled with an array of <code>fileData</code>.</p>
       <span class="comment"># Add an index.html if our file is the entry point</span>
       <span class="keyword">if</span> name <span class="keyword">is</span> entryPoint
         extras.push
-          path: <span class="string">"<span class="subst">#{base}</span>/index.html"</span>
           content: content
+          mode: <span class="string">"100644"</span>
+          path: <span class="string">"<span class="subst">#{base}</span>/index.html"</span>
+          type: <span class="string">"blob"</span>
 
-      path: <span class="string">"<span class="subst">#{base}</span>/<span class="subst">#{name}</span>.html"</span>
       content: content
+      mode: <span class="string">"100644"</span>
+      path: <span class="string">"<span class="subst">#{base}</span>/<span class="subst">#{name}</span>.html"</span>
+      type: <span class="string">"blob"</span>
 
     Deferred().resolve(extras.concat(results))</code></pre>
 </div>
@@ -182,14 +186,16 @@ promise that will be fulfilled with an array of <code>fileData</code>.</p>
             </div>
             <div class="content"><pre><code class="lang-coffeescript">interactiveLoader =
   <span class="string">"""
-    $.ajax({
-      url: "http://strd6.github.io/interactive/v0.8.1.jsonp"
-      dataType: "jsonp"
-      jsonpCallback: "STRd6/interactive:v0.8.1"
-      cache: true
-    }).then(function(PACKAGE) {
-      Require.generateFor(PACKAGE)("./" + PACKAGE.entryPoint)
-    })
+    &lt;script&gt;
+      $.ajax({
+        url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
+        dataType: "jsonp",
+        jsonpCallback: "STRd6/interactive:v0.8.1",
+        cache: true
+      }).then(function(PACKAGE) {
+        Require.generateFor(PACKAGE)("./" + PACKAGE.entryPoint)
+      })
+    &lt;\/script&gt;
   """</span></code></pre>
 </div>
         </li>
@@ -256,13 +262,15 @@ the current package and is meant to be included in every docs page.</p>
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">packageScript</span></span> = (base, pkg) -&gt;
-  path: <span class="string">"<span class="subst">#{base}</span>/package.js"</span>
   content: <span class="string">"""
     (function(pkg) {
       // Expose a require for our package so scripts can access our modules
       window.require = Require.generateFor(pkg);
     })(<span class="subst">#{JSON.stringify(pkg, <span class="literal">null</span>, <span class="number">2</span>)}</span>);
-  """</span></code></pre>
+  """</span>
+  mode: <span class="string">"100644"</span>
+  path: <span class="string">"<span class="subst">#{base}</span>/package.js"</span>
+  type: <span class="string">"blob"</span></code></pre>
 </div>
         </li>
         
@@ -291,8 +299,16 @@ the current package and is meant to be included in every docs page.</p>
   <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="http://strd6.github.io/require/v0.2.2.js"></script>
-<script src="http://strd6.github.io/interactive/v0.8.0.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="http://strd6.github.io/tempest/javascripts/envweb.js"></script><script src="package.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="http://strd6.github.io/tempest/javascripts/envweb.js"></script><script>
+  $.ajax({
+    url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
+    dataType: "jsonp",
+    jsonpCallback: "STRd6/interactive:v0.8.1",
+    cache: true
+  }).then(function(PACKAGE) {
+    Require.generateFor(PACKAGE)("./" + PACKAGE.entryPoint)
+  })
+</script><script src="package.js"></script>
 </body>
 </html>
