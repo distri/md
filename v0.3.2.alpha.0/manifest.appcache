@@ -1,0 +1,12 @@
+CACHE MANIFEST
+# 1392776255880
+
+CACHE:
+index.html
+https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js
+http://strd6.github.io/tempest/javascripts/envweb.js
+
+NETWORK:
+https://*
+http://*
+*
