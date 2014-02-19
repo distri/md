@@ -45,6 +45,8 @@ promise that will be fulfilled with an array of `fileData`.
 
         if branch is default_branch
           base = "docs"
+        else if branch is "blog" # HACK
+          base = ""
         else
           base = "#{branch}/docs"
 
