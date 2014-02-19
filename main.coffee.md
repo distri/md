@@ -46,9 +46,9 @@ promise that will be fulfilled with an array of `fileData`.
         if branch is "blog" # HACK
           base = ""
         else if branch is default_branch
-          base = "docs"
+          base = "docs/"
         else
-          base = "#{branch}/docs"
+          base = "#{branch}/docs/"
 
         documentableFiles = Object.keys(source).select (name) ->
           name.extension() is "md"
@@ -62,9 +62,9 @@ promise that will be fulfilled with an array of `fileData`.
         extras = [packageScript(base, pkg)]
 
         scripts = dependencyScripts unique([
-          "//code.jquery.com/jquery-1.10.1.min.js"
-          "//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"
-          "http://strd6.github.io/require/v0.2.2.js"
+          "https://code.jquery.com/jquery-1.10.1.min.js"
+          "https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"
+          "http://www.danielx.net/require/v0.2.2.js"
         ].concat(
           pkg.remoteDependencies or []
         ))
@@ -86,12 +86,12 @@ promise that will be fulfilled with an array of `fileData`.
             extras.push
               content: content
               mode: "100644"
-              path: "#{base}/index.html"
+              path: "#{base}index.html"
               type: "blob"
 
           content: content
           mode: "100644"
-          path: "#{base}/#{name}.html"
+          path: "#{base}#{name}.html"
           type: "blob"
 
         Deferred().resolve(extras.concat(results))
@@ -148,7 +148,7 @@ the current package and is meant to be included in every docs page.
         })(#{JSON.stringify(pkg, null, 2)});
       """
       mode: "100644"
-      path: "#{base}/package.js"
+      path: "#{base}package.js"
       type: "blob"
 
 Package Script path
