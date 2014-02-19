@@ -43,10 +43,10 @@ promise that will be fulfilled with an array of `fileData`.
         {entryPoint, source, repository} = pkg
         {branch, default_branch} = repository
 
-        if branch is default_branch
-          base = "docs"
-        else if branch is "blog" # HACK
+        if branch is "blog" # HACK
           base = ""
+        else if branch is default_branch
+          base = "docs"
         else
           base = "#{branch}/docs"
 
