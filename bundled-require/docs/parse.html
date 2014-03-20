@@ -107,7 +107,7 @@ sectionBreak = <span class="regexp">/^(---+|===+)$/</span></code></pre>
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">  <span class="function"><span class="title">lastSection</span></span> = -&gt;
-    sections.last()</code></pre>
+    sections[sections.length-<span class="number">1</span>]</code></pre>
 </div>
         </li>
         
@@ -156,7 +156,7 @@ our text to the previous section.</p>
 
   lastWasCode = <span class="literal">false</span>
 
-  source.split(<span class="string">"\n"</span>).each (line) -&gt;
+  source.split(<span class="string">"\n"</span>).forEach (line) -&gt;
     <span class="keyword">if</span> blank.exec(line)
       pushEmpty()
     <span class="keyword">else</span> <span class="keyword">if</span> match = indent.exec(line)
@@ -166,9 +166,11 @@ our text to the previous section.</p>
       lastWasCode = <span class="literal">false</span>
       pushText line
 
-  sections.each (section) -&gt;
+  sections.forEach (section) -&gt;
     section.text = truncateEmpties(section.text).join(<span class="string">"\n"</span>)
     section.code = truncateEmpties(section.code).join(<span class="string">"\n"</span>)
+
+  <span class="keyword">return</span> sections
 
 module.exports = parse</code></pre>
 </div>
@@ -199,7 +201,7 @@ we&#39;re not left with extra newlines and things in between sections.</p>
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">truncateEmpties</span></span> = (array) -&gt;
-  <span class="keyword">while</span> (last = array.last())? <span class="keyword">and</span> last <span class="keyword">is</span> <span class="string">""</span>
+  <span class="keyword">while</span> (last = array[array.length-<span class="number">1</span>])? <span class="keyword">and</span> last <span class="keyword">is</span> <span class="string">""</span>
     array.pop()
 
   <span class="keyword">return</span> array</code></pre>
@@ -211,8 +213,7 @@ we&#39;re not left with extra newlines and things in between sections.</p>
   <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="http://www.danielx.net/require/v0.2.2.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="http://www.danielx.net/tempest/javascripts/envweb.js"></script><script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script><script>
   $.ajax({
     url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
     dataType: "jsonp",

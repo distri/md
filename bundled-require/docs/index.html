@@ -116,8 +116,8 @@ promise that will be fulfilled with an array of <code>fileData</code>.</p>
     <span class="keyword">else</span>
       base = <span class="string">"<span class="subst">#{branch}</span>/docs/"</span>
 
-    documentableFiles = Object.keys(source).select (name) -&gt;
-      name.extension() <span class="keyword">is</span> <span class="string">"md"</span>
+    documentableFiles = Object.keys(source).filter (name) -&gt;
+      extension(name) <span class="keyword">is</span> <span class="string">"md"</span>
 
     results = documentableFiles.map (name) -&gt;
       language = name.withoutExtension().extension()
@@ -291,13 +291,26 @@ the current package and is meant to be included in every docs page.</p>
 </div>
         </li>
         
+        
+        <li id="section-14">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>File extension for string</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">extension</span></span> = (string) -&gt;
+  string.match(<span class="regexp">/\.([^.]*)$/</span>)</code></pre>
+</div>
+        </li>
+        
     </ul>
   </div>
   <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="http://www.danielx.net/require/v0.2.2.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="http://www.danielx.net/tempest/javascripts/envweb.js"></script><script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script><script>
   $.ajax({
     url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
     dataType: "jsonp",
