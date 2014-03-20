@@ -142,10 +142,7 @@ the current package and is meant to be included in every docs page.
       content: """
         (function(pkg) {
           // Expose a require for our package so scripts can access our modules
-          var oldRequire = window.Require;
           #{PACKAGE.dependencies.require.distribution.main.content}
-          window.require = Require.generateFor(pkg);
-          window.Require = oldRequire;
         })(#{JSON.stringify(pkg, null, 2)});
       """
       mode: "100644"
