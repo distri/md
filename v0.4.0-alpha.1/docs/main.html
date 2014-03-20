@@ -263,8 +263,8 @@ the current package and is meant to be included in every docs page.</p>
             <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">packageScript</span></span> = (base, pkg) -&gt;
   content: <span class="string">"""
     (function(pkg) {
-      // Expose a require for our package so scripts can access our modules
       <span class="subst">#{PACKAGE.dependencies.require.distribution.main.content}</span>
+      window.require = Require.generateFor(pkg);
     })(<span class="subst">#{JSON.stringify(pkg, <span class="literal">null</span>, <span class="number">2</span>)}</span>);
   """</span>
   mode: <span class="string">"100644"</span>
