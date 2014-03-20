@@ -1,4 +1,7 @@
-window["STRd6/md:v0.4.0-alpha.4"]({
+(function(pkg) {
+  // Expose a require for our package so scripts can access our modules
+  window.require = Require.generateFor(pkg);
+})({
   "source": {
     "LICENSE": {
       "path": "LICENSE",
