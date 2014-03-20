@@ -41,10 +41,10 @@ describe "A normal markdown paragraph", ->
   it "should keep newlines within", ->
     sections = md.parse """
       I'm talking about stuff.
-      
+
       Paragraph two is rad!
     """
-    
+
     assert sections.first().text.match("\n\n")
 
 describe "Headers", ->
@@ -52,10 +52,10 @@ describe "Headers", ->
     sections = md.parse """
       Intro
       -----
-      
+
       Some other stuff
     """
-    
+
     assert sections.length is 2
 
 describe "Many code text sequences", ->
@@ -71,7 +71,7 @@ describe "Many code text sequences", ->
 
       Hey
     """
-    
+
     assert sections.length is 3
 
 describe "documenting a file", ->
@@ -86,7 +86,7 @@ describe "documenting a file package", ->
         default_branch: "master"
       entryPoint: "main"
       source:
-        "main.coffee.md": 
+        "main.coffee.md":
           content: "Yolo is a lifestyle choice\n    alert 'wat'"
     ).then (results) ->
       done()

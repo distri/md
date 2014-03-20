@@ -64,7 +64,6 @@ promise that will be fulfilled with an array of `fileData`.
         scripts = dependencyScripts unique([
           "https://code.jquery.com/jquery-1.10.1.min.js"
           "https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"
-          "http://www.danielx.net/require/v0.2.2.js"
         ].concat(
           pkg.remoteDependencies or []
         ))
@@ -99,20 +98,6 @@ promise that will be fulfilled with an array of `fileData`.
 Helpers
 -------
 
-    interactiveLoader =
-      """
-        <script>
-          $.ajax({
-            url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
-            dataType: "jsonp",
-            jsonpCallback: "STRd6/interactive:v0.8.1",
-            cache: true
-          }).then(function(PACKAGE) {
-            Require.generateFor(PACKAGE)("./" + PACKAGE.entryPoint)
-          })
-        <\/script>
-      """
-
 `makeScript` returns a string representation of a script tag that has a src
 attribute.
 
@@ -137,6 +122,14 @@ the dependencies of this build.
         results
       , []
 
+Include the interactive docs loader, this connection is a bit tenuous.
+
+    interactiveLoader = """
+      <script>
+        #{PACKAGE.dependencies.interactive.distribution.interactive.content}
+      <\/script>
+    """
+
 This returns a script file that exposes a global `require` that gives access to
 the current package and is meant to be included in every docs page.
 
@@ -144,7 +137,10 @@ the current package and is meant to be included in every docs page.
       content: """
         (function(pkg) {
           // Expose a require for our package so scripts can access our modules
+          var oldRequire = window.Require;
+          #{PACKAGE.dependencies.require.distribution.main.content}
           window.require = Require.generateFor(pkg);
+          window.Require = oldRequire;
         })(#{JSON.stringify(pkg, null, 2)});
       """
       mode: "100644"

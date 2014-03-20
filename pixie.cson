@@ -3,3 +3,6 @@ remoteDependencies: [
   "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"
   "http://www.danielx.net/tempest/javascripts/envweb.js"
 ]
+dependencies:
+  require: "distri/require:v0.4.1"
+  interactive: "distri/interactive:v0.8.2"
