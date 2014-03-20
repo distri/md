@@ -35,9 +35,7 @@ Our docco style template.
 Document one file.
 
       compile: (content, language="coffeescript") ->
-        doctor.parse(content).map ({text, code}) ->
-          console.log "radial"
-        
+        doctor.parse(content).map ({text, code}) ->        
           docsHtml: marked(text)
           codeHtml: marked "```#{language}\n#{code}\n```"
 
