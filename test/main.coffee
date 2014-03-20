@@ -19,8 +19,8 @@ describe "Parsing", ->
     """
 
     assert sections.length is 1
-    assert sections.first().text is "A sample text + code section"
-    assert sections.first().code is "I'm the code"
+    assert sections[0].text is "A sample text + code section"
+    assert sections[0].code is "I'm the code"
 
 describe "Stuff spanning multiple lines", ->
   it "should be split by newline characters", ->
@@ -34,8 +34,8 @@ describe "Stuff spanning multiple lines", ->
     """
 
     assert sections.length is 1
-    assert sections.first().text is "1\n2\n3"
-    assert sections.first().code is "Code1\nCode2"
+    assert sections[0].text is "1\n2\n3"
+    assert sections[0].code is "Code1\nCode2"
 
 describe "A normal markdown paragraph", ->
   it "should keep newlines within", ->
@@ -45,7 +45,7 @@ describe "A normal markdown paragraph", ->
       Paragraph two is rad!
     """
 
-    assert sections.first().text.match("\n\n")
+    assert sections[0].text.match("\n\n")
 
 describe "Headers", ->
   it "should split sections", ->

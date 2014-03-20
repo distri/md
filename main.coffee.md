@@ -50,8 +50,8 @@ promise that will be fulfilled with an array of `fileData`.
         else
           base = "#{branch}/docs/"
 
-        documentableFiles = Object.keys(source).select (name) ->
-          name.extension() is "md"
+        documentableFiles = Object.keys(source).filter (name) ->
+          extension(name) is "md"
 
         results = documentableFiles.map (name) ->
           language = name.withoutExtension().extension()
@@ -157,3 +157,8 @@ Package Script path
         results.push upOne
 
       results.concat("package.js").join("")
+
+File extension for string
+
+    extension = (string) ->
+      string.match(/\.([^.]*)$/)
