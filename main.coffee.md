@@ -141,8 +141,8 @@ the current package and is meant to be included in every docs page.
     packageScript = (base, pkg) ->
       content: """
         (function(pkg) {
-          // Expose a require for our package so scripts can access our modules
           #{PACKAGE.dependencies.require.distribution.main.content}
+          window.require = Require.generateFor(pkg);
         })(#{JSON.stringify(pkg, null, 2)});
       """
       mode: "100644"
