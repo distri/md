@@ -19,8 +19,8 @@ describe "Parsing", ->
     """
 
     assert sections.length is 1
-    assert sections.first().text is "A sample text + code section"
-    assert sections.first().code is "I'm the code"
+    assert sections[0].text is "A sample text + code section"
+    assert sections[0].code is "I'm the code"
 
 describe "Stuff spanning multiple lines", ->
   it "should be split by newline characters", ->
@@ -34,28 +34,28 @@ describe "Stuff spanning multiple lines", ->
     """
 
     assert sections.length is 1
-    assert sections.first().text is "1\n2\n3"
-    assert sections.first().code is "Code1\nCode2"
+    assert sections[0].text is "1\n2\n3"
+    assert sections[0].code is "Code1\nCode2"
 
 describe "A normal markdown paragraph", ->
   it "should keep newlines within", ->
     sections = md.parse """
       I'm talking about stuff.
-      
+
       Paragraph two is rad!
     """
-    
-    assert sections.first().text.match("\n\n")
+
+    assert sections[0].text.match("\n\n")
 
 describe "Headers", ->
   it "should split sections", ->
     sections = md.parse """
       Intro
       -----
-      
+
       Some other stuff
     """
-    
+
     assert sections.length is 2
 
 describe "Many code text sequences", ->
@@ -71,22 +71,23 @@ describe "Many code text sequences", ->
 
       Hey
     """
-    
+
     assert sections.length is 3
 
 describe "documenting a file", ->
-  it "should be 2legit", ->
+  it "should document a single file", ->
     assert md.compile("Hey")
 
 describe "documenting a file package", ->
-  it "should be 2legit", (done) ->
+  it "should document all files in the package", (done) ->
     md.documentAll(
       repository:
         branch: "master"
         default_branch: "master"
       entryPoint: "main"
       source:
-        "main.coffee.md": 
+        "main.coffee.md":
           content: "Yolo is a lifestyle choice\n    alert 'wat'"
     ).then (results) ->
+      console.log results
       done()

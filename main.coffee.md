@@ -11,6 +11,9 @@ We use marked for generating the markdown.
     highlight = require "./lib/highlight"
     languages = require "./languages"
 
+    # HACK: Using jQuery Deferred
+    global.Deferred ?= $.Deferred
+
     marked.setOptions
       highlight: (code, lang) ->
         if highlight.LANGUAGES[lang]
@@ -32,7 +35,7 @@ Our docco style template.
 Document one file.
 
       compile: (content, language="coffeescript") ->
-        doctor.parse(content).map ({text, code}) ->
+        doctor.parse(content).map ({text, code}) ->        
           docsHtml: marked(text)
           codeHtml: marked "```#{language}\n#{code}\n```"
 
@@ -50,11 +53,11 @@ promise that will be fulfilled with an array of `fileData`.
         else
           base = "#{branch}/docs/"
 
-        documentableFiles = Object.keys(source).select (name) ->
-          name.extension() is "md"
+        documentableFiles = Object.keys(source).filter (name) ->
+          extension(name) is "md"
 
         results = documentableFiles.map (name) ->
-          language = name.withoutExtension().extension()
+          language = extension(withoutExtension(name))
           language = languages[language] || language
 
           doctor.compile source[name].content, language
@@ -64,7 +67,6 @@ promise that will be fulfilled with an array of `fileData`.
         scripts = dependencyScripts unique([
           "https://code.jquery.com/jquery-1.10.1.min.js"
           "https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"
-          "http://www.danielx.net/require/v0.2.2.js"
         ].concat(
           pkg.remoteDependencies or []
         ))
@@ -74,7 +76,7 @@ promise that will be fulfilled with an array of `fileData`.
 
         results = results.map (result, i) ->
           # Assuming .*.md so we should strip the extension twice
-          name = documentableFiles[i].withoutExtension().withoutExtension()
+          name = withoutExtension(withoutExtension(documentableFiles[i]))
 
           content = doctor.template
             title: name
@@ -84,7 +86,10 @@ promise that will be fulfilled with an array of `fileData`.
           # Add an index.html if our file is the entry point
           if name is entryPoint
             extras.push
-              content: content
+              content: doctor.template
+                title: "index"
+                sections: result
+                scripts:  "#{scripts}#{makeScript(relativeScriptPath("index"))}"
               mode: "100644"
               path: "#{base}index.html"
               type: "blob"
@@ -98,20 +103,6 @@ promise that will be fulfilled with an array of `fileData`.
 
 Helpers
 -------
-
-    interactiveLoader =
-      """
-        <script>
-          $.ajax({
-            url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
-            dataType: "jsonp",
-            jsonpCallback: "STRd6/interactive:v0.8.1",
-            cache: true
-          }).then(function(PACKAGE) {
-            Require.generateFor(PACKAGE)("./" + PACKAGE.entryPoint)
-          })
-        <\/script>
-      """
 
 `makeScript` returns a string representation of a script tag that has a src
 attribute.
@@ -137,13 +128,21 @@ the dependencies of this build.
         results
       , []
 
+Include the interactive docs loader, this connection is a bit tenuous.
+
+    interactiveLoader = """
+      <script>
+        #{PACKAGE.dependencies.interactive.distribution.interactive.content}
+      <\/script>
+    """
+
 This returns a script file that exposes a global `require` that gives access to
 the current package and is meant to be included in every docs page.
 
     packageScript = (base, pkg) ->
       content: """
         (function(pkg) {
-          // Expose a require for our package so scripts can access our modules
+          #{PACKAGE.dependencies.require.distribution.main.content}
           window.require = Require.generateFor(pkg);
         })(#{JSON.stringify(pkg, null, 2)});
       """
@@ -157,7 +156,20 @@ Package Script path
       upOne = "../"
       results = []
 
-      (path.split("/").length - 1).times ->
-        results.push upOne
+      levels = (path.split("/").length - 1)
+      if levels > 0
+        [0...levels].forEach ->
+          results.push upOne
 
       results.concat("package.js").join("")
+
+File extension for string
+
+    extension = (str) ->
+      if match = str.match(/\.([^\.]*)$/, '')
+        match[match.length - 1]
+      else
+        ''
+
+    withoutExtension = (str) ->
+      str.replace(/\.[^\.]*$/,"")

@@ -29,7 +29,7 @@ Our array of sections that we will return.
 A helper to get the last section in the array.
 
       lastSection = ->
-        sections.last()
+        sections[sections.length-1]
 
 Whenever we encounter code we push it onto the last section.
 
@@ -62,7 +62,7 @@ our text to the previous section.
 
       lastWasCode = false
 
-      source.split("\n").each (line) ->
+      source.split("\n").forEach (line) ->
         if blank.exec(line)
           pushEmpty()
         else if match = indent.exec(line)
@@ -72,9 +72,11 @@ our text to the previous section.
           lastWasCode = false
           pushText line
 
-      sections.each (section) ->
+      sections.forEach (section) ->
         section.text = truncateEmpties(section.text).join("\n")
         section.code = truncateEmpties(section.code).join("\n")
+
+      return sections
 
     module.exports = parse
 
@@ -85,7 +87,7 @@ This helper removes empty strings from the end of our text and code arrays so
 we're not left with extra newlines and things in between sections.
 
     truncateEmpties = (array) ->
-      while (last = array.last())? and last is ""
+      while (last = array[array.length-1])? and last is ""
         array.pop()
 
       return array
