@@ -153,8 +153,10 @@ Package Script path
       upOne = "../"
       results = []
 
-      [0...(path.split("/").length - 1)].forEach ->
-        results.push upOne
+      levels = (path.split("/").length - 1)
+      if levels > 0
+        [0...levels].forEach ->
+          results.push upOne
 
       results.concat("package.js").join("")
 
