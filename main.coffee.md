@@ -86,7 +86,10 @@ promise that will be fulfilled with an array of `fileData`.
           # Add an index.html if our file is the entry point
           if name is entryPoint
             extras.push
-              content: content
+              content: doctor.template
+                title: "index"
+                sections: result
+                scripts:  "#{scripts}#{makeScript(relativeScriptPath("index"))}"
               mode: "100644"
               path: "#{base}index.html"
               type: "blob"
