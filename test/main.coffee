@@ -75,11 +75,11 @@ describe "Many code text sequences", ->
     assert sections.length is 3
 
 describe "documenting a file", ->
-  it "should be 2legit", ->
+  it "should document a single file", ->
     assert md.compile("Hey")
 
 describe "documenting a file package", ->
-  it "should be 2legit", (done) ->
+  it "should document all files in the package", (done) ->
     md.documentAll(
       repository:
         branch: "master"
@@ -89,4 +89,5 @@ describe "documenting a file package", ->
         "main.coffee.md":
           content: "Yolo is a lifestyle choice\n    alert 'wat'"
     ).then (results) ->
+      console.log results
       done()

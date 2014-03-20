@@ -11,6 +11,9 @@ We use marked for generating the markdown.
     highlight = require "./lib/highlight"
     languages = require "./languages"
 
+    # HACK: Using jQuery Deferred
+    global.Deferred ?= $.Deferred
+
     marked.setOptions
       highlight: (code, lang) ->
         if highlight.LANGUAGES[lang]
@@ -33,6 +36,8 @@ Document one file.
 
       compile: (content, language="coffeescript") ->
         doctor.parse(content).map ({text, code}) ->
+          console.log "radial"
+        
           docsHtml: marked(text)
           codeHtml: marked "```#{language}\n#{code}\n```"
 
@@ -54,7 +59,7 @@ promise that will be fulfilled with an array of `fileData`.
           extension(name) is "md"
 
         results = documentableFiles.map (name) ->
-          language = name.withoutExtension().extension()
+          language = extension(withoutExtension(name))
           language = languages[language] || language
 
           doctor.compile source[name].content, language
@@ -73,7 +78,7 @@ promise that will be fulfilled with an array of `fileData`.
 
         results = results.map (result, i) ->
           # Assuming .*.md so we should strip the extension twice
-          name = documentableFiles[i].withoutExtension().withoutExtension()
+          name = withoutExtension(withoutExtension(documentableFiles[i]))
 
           content = doctor.template
             title: name
@@ -153,12 +158,18 @@ Package Script path
       upOne = "../"
       results = []
 
-      (path.split("/").length - 1).times ->
+      [0...(path.split("/").length - 1)].forEach ->
         results.push upOne
 
       results.concat("package.js").join("")
 
 File extension for string
 
-    extension = (string) ->
-      string.match(/\.([^.]*)$/)
+    extension = (str) ->
+      if match = str.match(/\.([^\.]*)$/, '')
+        match[match.length - 1]
+      else
+        ''
+
+    withoutExtension = (str) ->
+      str.replace(/\.[^\.]*$/,"")
