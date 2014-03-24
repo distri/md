@@ -1,16 +1,6 @@
-<!DOCTYPE html>
-<html manifest="manifest.appcache?1395705338118">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
-</head>
-<body>
-<script>
-;(function(PACKAGE) {
-var oldRequire = window.Require;
-(function() {
-  var annotateSourceURL, cacheFor, circularGuard, defaultEntryPoint, fileSeparator, generateRequireFn, global, isPackage, loadModule, loadPackage, loadPath, normalizePath, rootModule, startsWith,
+(function(pkg) {
+  (function() {
+  var cacheFor, circularGuard, defaultEntryPoint, fileSeparator, generateRequireFn, global, isPackage, loadModule, loadPackage, loadPath, normalizePath, rootModule, startsWith,
     __slice = [].slice;
 
   fileSeparator = '/';
@@ -73,10 +63,10 @@ var oldRequire = window.Require;
     return result.join(fileSeparator);
   };
 
-  loadPackage = function(pkg) {
+  loadPackage = function(parentModule, pkg) {
     var path;
     path = pkg.entryPoint || defaultEntryPoint;
-    return loadPath(rootModule, pkg, path);
+    return loadPath(parentModule, pkg, path);
   };
 
   loadModule = function(pkg, path) {
@@ -84,7 +74,7 @@ var oldRequire = window.Require;
     if (!(file = pkg.distribution[path])) {
       throw "Could not find file at " + path + " in " + pkg.name;
     }
-    program = annotateSourceURL(file.content, pkg, path);
+    program = file.content;
     dirname = path.split(fileSeparator).slice(0, -1).join(fileSeparator);
     module = {
       path: dirname,
@@ -122,9 +112,6 @@ var oldRequire = window.Require;
     if (pkg.name == null) {
       pkg.name = "ROOT";
     }
-    if (pkg.scopedName == null) {
-      pkg.scopedName = "ROOT";
-    }
     return function(path) {
       var otherPackage;
       if (isPackage(path)) {
@@ -134,10 +121,7 @@ var oldRequire = window.Require;
         if (otherPackage.name == null) {
           otherPackage.name = path;
         }
-        if (otherPackage.scopedName == null) {
-          otherPackage.scopedName = "" + pkg.scopedName + ":" + path;
-        }
-        return loadPackage(otherPackage);
+        return loadPackage(rootModule, otherPackage);
       } else {
         return loadPath(module, pkg, path);
       }
@@ -166,16 +150,10 @@ var oldRequire = window.Require;
     return pkg.cache;
   };
 
-  annotateSourceURL = function(program, pkg, path) {
-    return "" + program + "\n//# sourceURL=" + pkg.scopedName + "/" + path;
-  };
-
 }).call(this);
 
 //# sourceURL=main.coffee
-var require = Require.generateFor(PACKAGE);
-window.Require = oldRequire;
-require('./main')
+  window.require = Require.generateFor(pkg);
 })({
   "source": {
     "LICENSE": {
@@ -795,6 +773,3 @@ require('./main')
     }
   }
 });
-</script>
-</body>
-</html>
