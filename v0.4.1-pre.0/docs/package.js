@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-<html manifest="manifest.appcache?1396044182198">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
-</head>
-<body>
-<script>
-;(function(PACKAGE) {
-var oldRequire = window.Require;
-(function() {
+(function(pkg) {
+  (function() {
   var annotateSourceURL, cacheFor, circularGuard, defaultEntryPoint, fileSeparator, generateRequireFn, global, isPackage, loadModule, loadPackage, loadPath, normalizePath, rootModule, startsWith,
     __slice = [].slice;
 
@@ -173,9 +163,7 @@ var oldRequire = window.Require;
 }).call(this);
 
 //# sourceURL=main.coffee
-var require = Require.generateFor(PACKAGE);
-window.Require = oldRequire;
-require('./main')
+  window.require = Require.generateFor(pkg);
 })({
   "source": {
     "LICENSE": {
@@ -795,6 +783,3 @@ require('./main')
     }
   }
 });
-</script>
-</body>
-</html>

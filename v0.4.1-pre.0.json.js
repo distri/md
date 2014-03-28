@@ -45,7 +45,7 @@ window["distri/md:v0.4.1-pre.0"]({
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.4.1-pre.0\"\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\" # TODO: Eliminate this, currently just using for Deferred\n]\ndependencies:\n  require: \"distri/require:v0.4.2\"\n  interactive: \"distri/interactive:v0.8.3-pre.0\"\n",
+      "content": "version: \"0.4.1\"\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\" # TODO: Eliminate this, currently just using for Deferred\n]\ndependencies:\n  require: \"distri/require:v0.4.2\"\n  interactive: \"distri/interactive:v0.8.3\"\n",
       "type": "blob"
     },
     "template.coffee.md": {
@@ -101,7 +101,7 @@ window["distri/md:v0.4.1-pre.0"]({
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.4.1-pre.0\",\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\"],\"dependencies\":{\"require\":\"distri/require:v0.4.2\",\"interactive\":\"distri/interactive:v0.8.3-pre.0\"}};",
+      "content": "module.exports = {\"version\":\"0.4.1\",\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\"],\"dependencies\":{\"require\":\"distri/require:v0.4.2\",\"interactive\":\"distri/interactive:v0.8.3\"}};",
       "type": "blob"
     },
     "template": {
@@ -128,7 +128,7 @@ window["distri/md:v0.4.1-pre.0"]({
   "progenitor": {
     "url": "http://strd6.github.io/editor/"
   },
-  "version": "0.4.1-pre.0",
+  "version": "0.4.1",
   "entryPoint": "main",
   "remoteDependencies": [
     "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js",
@@ -477,7 +477,7 @@ window["distri/md:v0.4.1-pre.0"]({
         "pixie.cson": {
           "path": "pixie.cson",
           "mode": "100644",
-          "content": "version: \"0.8.3-pre.0\"\nentryPoint: \"interactive\"\n",
+          "content": "version: \"0.8.3\"\nentryPoint: \"interactive\"\n",
           "type": "blob"
         }
       },
@@ -489,14 +489,14 @@ window["distri/md:v0.4.1-pre.0"]({
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.8.3-pre.0\",\"entryPoint\":\"interactive\"};",
+          "content": "module.exports = {\"version\":\"0.8.3\",\"entryPoint\":\"interactive\"};",
           "type": "blob"
         }
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
       },
-      "version": "0.8.3-pre.0",
+      "version": "0.8.3",
       "entryPoint": "interactive",
       "repository": {
         "id": 13078696,
@@ -610,7 +610,7 @@ window["distri/md:v0.4.1-pre.0"]({
         },
         "network_count": 0,
         "subscribers_count": 1,
-        "branch": "v0.8.3-pre.0",
+        "branch": "v0.8.3",
         "publishBranch": "gh-pages"
       },
       "dependencies": {}
