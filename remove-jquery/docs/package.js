@@ -210,7 +210,7 @@
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "version: \"0.4.2-pre.0\"\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n]\ndependencies:\n  require: \"distri/require:v0.4.2\"\n  interactive: \"distri/interactive:v0.8.3\"\n  q: \"distri/q:v1.0.1\"\n",
+      "content": "version: \"0.4.2\"\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n]\ndependencies:\n  require: \"distri/require:v0.4.2\"\n  interactive: \"distri/interactive:v0.8.3\"\n  q: \"distri/q:v1.0.1\"\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -267,7 +267,7 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.4.2-pre.0\",\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"],\"dependencies\":{\"require\":\"distri/require:v0.4.2\",\"interactive\":\"distri/interactive:v0.8.3\",\"q\":\"distri/q:v1.0.1\"}};",
+      "content": "module.exports = {\"version\":\"0.4.2\",\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"],\"dependencies\":{\"require\":\"distri/require:v0.4.2\",\"interactive\":\"distri/interactive:v0.8.3\",\"q\":\"distri/q:v1.0.1\"}};",
       "type": "blob"
     },
     "template": {
@@ -294,7 +294,7 @@
   "progenitor": {
     "url": "http://www.danielx.net/editor/"
   },
-  "version": "0.4.2-pre.0",
+  "version": "0.4.2",
   "entryPoint": "main",
   "remoteDependencies": [
     "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"
