@@ -11,9 +11,6 @@ We use marked for generating the markdown.
     highlight = require "./lib/highlight"
     languages = require "./languages"
 
-    # HACK: Using jQuery Deferred
-    global.Deferred ?= $.Deferred
-
     marked.setOptions
       highlight: (code, lang) ->
         if highlight.LANGUAGES[lang]
@@ -99,7 +96,7 @@ promise that will be fulfilled with an array of `fileData`.
           path: "#{base}#{name}.html"
           type: "blob"
 
-        Deferred().resolve(extras.concat(results))
+        Promise.resolve(extras.concat(results))
 
 Helpers
 -------
