@@ -9,7 +9,7 @@ Stole the template from Docco parallel style.
         <title><%= title %></title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-        <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
+        <link rel="stylesheet" media="all" href="https://strd6.github.io/cdn/parallel/docco.css" />
       </head>
       <body>
         <div id="container">
