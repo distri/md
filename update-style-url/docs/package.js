@@ -210,13 +210,13 @@
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "version: \"0.4.3-pre.1\"\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n]\ndependencies:\n  require: \"distri/require:master\"\n  interactive: \"distri/interactive:v0.8.3\"\n",
+      "content": "version: \"0.4.3-pre.2\"\ndependencies:\n  require: \"distri/require:master\"\n  interactive: \"distri/interactive:v0.8.3\"\n",
       "mode": "100644",
       "type": "blob"
     },
     "template.coffee.md": {
       "path": "template.coffee.md",
-      "content": "\nStole the template from Docco parallel style.\n\n    template = _.template \"\"\"\n      <!DOCTYPE html>\n\n      <html>\n      <head>\n        <title><%= title %></title>\n        <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n        <meta name=\"viewport\" content=\"width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\">\n        <link rel=\"stylesheet\" media=\"all\" href=\"https://strd6.github.io/cdn/parallel/docco.css\" />\n      </head>\n      <body>\n        <div id=\"container\">\n          <div id=\"background\"></div>\n          <ul class=\"sections\">\n              <% for (var i=0, l=sections.length; i<l; i++) { %>\n              <% var section = sections[i]; %>\n              <li id=\"section-<%= i + 1 %>\">\n                  <div class=\"annotation\">\n                    <div class=\"pilwrap\">\n                      <a class=\"pilcrow\" href=\"#section-<%= i + 1 %>\">&#182;</a>\n                    </div>\n                    <%= section.docsHtml %>\n                  </div>\n                  <div class=\"content\"><%= section.codeHtml %></div>\n              </li>\n              <% } %>\n          </ul>\n        </div>\n        <%= scripts %>\n      </body>\n      </html>\n    \"\"\"\n\n    module.exports = template\n",
+      "content": "\nStole the template from Docco parallel style.\n\n    Section = ({codeHtml, docsHtml}, i) -> \"\"\"\n      <li id=\"section-#{i + 1}\">\n        <div class=\"annotation\">\n          <div class=\"pilwrap\">\n            <a class=\"pilcrow\" href=\"#section-#{i + 1}\">&#182;</a>\n          </div>\n          #{docsHtml}\n        </div>\n        <div class=\"content\">#{codeHtml}</div>\n      </li>\n    \"\"\"\n\n\n    template = ({title, sections, scripts}) -> \n      scripts ?= \"\"\n\n      \"\"\"\n        <!DOCTYPE html>\n  \n        <html>\n        <head>\n          <title>#{title}</title>\n          <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n          <meta name=\"viewport\" content=\"width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\">\n          <link rel=\"stylesheet\" media=\"all\" href=\"https://strd6.github.io/cdn/parallel/docco.css\" />\n        </head>\n        <body>\n          <div id=\"container\">\n            <div id=\"background\"></div>\n            <ul class=\"sections\">\n              #{sections.map(Section).join(\"\\n\")}\n            </ul>\n          </div>\n          #{scripts}\n        </body>\n        </html>\n      \"\"\"\n\n    module.exports = template\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -234,7 +234,7 @@
     },
     "test/template.coffee": {
       "path": "test/template.coffee",
-      "content": "template = require \"../template\"\n\ndescribe \"template\", ->\n  it \"should exist\", ->\n    assert template\n\n  it \"should render html when given a title and sections\", ->\n    result = template\n      scripts: \"\"\n      title: \"Test\"\n      sections: [\n        docsHtml: \"<h1>Hello</h1>\"\n        codeHtml: \"<pre>1 + 1 == 2</pre>\"\n      ]\n\n    assert result\n",
+      "content": "template = require \"../template\"\n\ndescribe \"template\", ->\n  it \"should exist\", ->\n    assert template\n\n  it \"should render html when given a title and sections\", ->\n    result = template\n      scripts: \"\"\n      title: \"Test\"\n      sections: [{\n        docsHtml: \"<h1>Hello</h1>\"\n        codeHtml: \"<pre>1 + 1 == 2</pre>\"\n      }, {\n        docsHtml: \"<h2>Yolo</h2>\"\n        codeHtml: \"world\"\n      }]\n\n    console.log result\n    assert result\n",
       "mode": "100644",
       "type": "blob"
     }
@@ -267,12 +267,12 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.4.3-pre.1\",\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"],\"dependencies\":{\"require\":\"distri/require:master\",\"interactive\":\"distri/interactive:v0.8.3\"}};",
+      "content": "module.exports = {\"version\":\"0.4.3-pre.2\",\"dependencies\":{\"require\":\"distri/require:master\",\"interactive\":\"distri/interactive:v0.8.3\"}};",
       "type": "blob"
     },
     "template": {
       "path": "template",
-      "content": "(function() {\n  var template;\n\n  template = _.template(\"<!DOCTYPE html>\\n\\n<html>\\n<head>\\n  <title><%= title %></title>\\n  <meta http-equiv=\\\"content-type\\\" content=\\\"text/html; charset=UTF-8\\\">\\n  <meta name=\\\"viewport\\\" content=\\\"width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\\\">\\n  <link rel=\\\"stylesheet\\\" media=\\\"all\\\" href=\\\"https://strd6.github.io/cdn/parallel/docco.css\\\" />\\n</head>\\n<body>\\n  <div id=\\\"container\\\">\\n    <div id=\\\"background\\\"></div>\\n    <ul class=\\\"sections\\\">\\n        <% for (var i=0, l=sections.length; i<l; i++) { %>\\n        <% var section = sections[i]; %>\\n        <li id=\\\"section-<%= i + 1 %>\\\">\\n            <div class=\\\"annotation\\\">\\n              <div class=\\\"pilwrap\\\">\\n                <a class=\\\"pilcrow\\\" href=\\\"#section-<%= i + 1 %>\\\">&#182;</a>\\n              </div>\\n              <%= section.docsHtml %>\\n            </div>\\n            <div class=\\\"content\\\"><%= section.codeHtml %></div>\\n        </li>\\n        <% } %>\\n    </ul>\\n  </div>\\n  <%= scripts %>\\n</body>\\n</html>\");\n\n  module.exports = template;\n\n}).call(this);\n",
+      "content": "(function() {\n  var Section, template;\n\n  Section = function(_arg, i) {\n    var codeHtml, docsHtml;\n    codeHtml = _arg.codeHtml, docsHtml = _arg.docsHtml;\n    return \"<li id=\\\"section-\" + (i + 1) + \"\\\">\\n  <div class=\\\"annotation\\\">\\n    <div class=\\\"pilwrap\\\">\\n      <a class=\\\"pilcrow\\\" href=\\\"#section-\" + (i + 1) + \"\\\">&#182;</a>\\n    </div>\\n    \" + docsHtml + \"\\n  </div>\\n  <div class=\\\"content\\\">\" + codeHtml + \"</div>\\n</li>\";\n  };\n\n  template = function(_arg) {\n    var scripts, sections, title;\n    title = _arg.title, sections = _arg.sections, scripts = _arg.scripts;\n    if (scripts == null) {\n      scripts = \"\";\n    }\n    return \"<!DOCTYPE html>\\n\\n<html>\\n<head>\\n  <title>\" + title + \"</title>\\n  <meta http-equiv=\\\"content-type\\\" content=\\\"text/html; charset=UTF-8\\\">\\n  <meta name=\\\"viewport\\\" content=\\\"width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\\\">\\n  <link rel=\\\"stylesheet\\\" media=\\\"all\\\" href=\\\"https://strd6.github.io/cdn/parallel/docco.css\\\" />\\n</head>\\n<body>\\n  <div id=\\\"container\\\">\\n    <div id=\\\"background\\\"></div>\\n    <ul class=\\\"sections\\\">\\n      \" + (sections.map(Section).join(\"\\n\")) + \"\\n    </ul>\\n  </div>\\n  \" + scripts + \"\\n</body>\\n</html>\";\n  };\n\n  module.exports = template;\n\n}).call(this);\n",
       "type": "blob"
     },
     "test/languages": {
@@ -287,18 +287,15 @@
     },
     "test/template": {
       "path": "test/template",
-      "content": "(function() {\n  var template;\n\n  template = require(\"../template\");\n\n  describe(\"template\", function() {\n    it(\"should exist\", function() {\n      return assert(template);\n    });\n    return it(\"should render html when given a title and sections\", function() {\n      var result;\n      result = template({\n        scripts: \"\",\n        title: \"Test\",\n        sections: [\n          {\n            docsHtml: \"<h1>Hello</h1>\",\n            codeHtml: \"<pre>1 + 1 == 2</pre>\"\n          }\n        ]\n      });\n      return assert(result);\n    });\n  });\n\n}).call(this);\n",
+      "content": "(function() {\n  var template;\n\n  template = require(\"../template\");\n\n  describe(\"template\", function() {\n    it(\"should exist\", function() {\n      return assert(template);\n    });\n    return it(\"should render html when given a title and sections\", function() {\n      var result;\n      result = template({\n        scripts: \"\",\n        title: \"Test\",\n        sections: [\n          {\n            docsHtml: \"<h1>Hello</h1>\",\n            codeHtml: \"<pre>1 + 1 == 2</pre>\"\n          }, {\n            docsHtml: \"<h2>Yolo</h2>\",\n            codeHtml: \"world\"\n          }\n        ]\n      });\n      console.log(result);\n      return assert(result);\n    });\n  });\n\n}).call(this);\n",
       "type": "blob"
     }
   },
   "progenitor": {
     "url": "https://danielx.net/editor/"
   },
-  "version": "0.4.3-pre.1",
+  "version": "0.4.3-pre.2",
   "entryPoint": "main",
-  "remoteDependencies": [
-    "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"
-  ],
   "repository": {
     "branch": "update-style-url",
     "default_branch": "master",
