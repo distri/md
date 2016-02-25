@@ -1,0 +1,12 @@
+CACHE MANIFEST
+# 1456372715124
+
+CACHE:
+index.html
+../v0.4.3-pre.1.json
+https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js
+
+NETWORK:
+https://*
+http://*
+*
