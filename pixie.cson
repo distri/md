@@ -1,4 +1,4 @@
 version: "0.4.3-pre.2"
 dependencies:
-  require: "distri/require:master"
+  require: "distri/require:v0.5.2"
   interactive: "distri/interactive:v0.8.3"

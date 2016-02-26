@@ -16,5 +16,4 @@ describe "template", ->
         codeHtml: "world"
       }]
 
-    console.log result
     assert result
