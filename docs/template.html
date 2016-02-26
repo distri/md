@@ -21,38 +21,43 @@
               <p>Stole the template from Docco parallel style.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">template = _.template <span class="string">"""
-  &lt;!DOCTYPE html&gt;
-
-  &lt;html&gt;
-  &lt;head&gt;
-    &lt;title&gt;&lt;%= title %&gt;&lt;/title&gt;
-    &lt;meta http-equiv="content-type" content="text/html; charset=UTF-8"&gt;
-    &lt;meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"&gt;
-    &lt;link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" /&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;div id="container"&gt;
-      &lt;div id="background"&gt;&lt;/div&gt;
-      &lt;ul class="sections"&gt;
-          &lt;% for (var i=0, l=sections.length; i&lt;l; i++) { %&gt;
-          &lt;% var section = sections[i]; %&gt;
-          &lt;li id="section-&lt;%= i + 1 %&gt;"&gt;
-              &lt;div class="annotation"&gt;
-                &lt;div class="pilwrap"&gt;
-                  &lt;a class="pilcrow" href="#section-&lt;%= i + 1 %&gt;"&gt;&amp;#182;&lt;/a&gt;
-                &lt;/div&gt;
-                &lt;%= section.docsHtml %&gt;
-              &lt;/div&gt;
-              &lt;div class="content"&gt;&lt;%= section.codeHtml %&gt;&lt;/div&gt;
-          &lt;/li&gt;
-          &lt;% } %&gt;
-      &lt;/ul&gt;
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">Section</span></span> = ({codeHtml, docsHtml}, i) -&gt; <span class="string">"""
+  &lt;li id="section-<span class="subst">#{i + <span class="number">1</span>}</span>"&gt;
+    &lt;div class="annotation"&gt;
+      &lt;div class="pilwrap"&gt;
+        &lt;a class="pilcrow" href="#section-<span class="subst">#{i + <span class="number">1</span>}</span>"&gt;&amp;#182;&lt;/a&gt;
+      &lt;/div&gt;
+      <span class="subst">#{docsHtml}</span>
     &lt;/div&gt;
-    &lt;%= scripts %&gt;
-  &lt;/body&gt;
-  &lt;/html&gt;
+    &lt;div class="content"&gt;<span class="subst">#{codeHtml}</span>&lt;/div&gt;
+  &lt;/li&gt;
 """</span>
+
+
+<span class="function"><span class="title">template</span></span> = ({title, sections, scripts}) -&gt; 
+  scripts ?= <span class="string">""</span>
+
+  <span class="string">"""
+    &lt;!DOCTYPE html&gt;
+
+    &lt;html&gt;
+    &lt;head&gt;
+      &lt;title&gt;<span class="subst">#{title}</span>&lt;/title&gt;
+      &lt;meta http-equiv="content-type" content="text/html; charset=UTF-8"&gt;
+      &lt;meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"&gt;
+      &lt;link rel="stylesheet" media="all" href="https://strd6.github.io/cdn/parallel/docco.css" /&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      &lt;div id="container"&gt;
+        &lt;div id="background"&gt;&lt;/div&gt;
+        &lt;ul class="sections"&gt;
+          <span class="subst">#{sections.map(Section).join("\n")}</span>
+        &lt;/ul&gt;
+      &lt;/div&gt;
+      <span class="subst">#{scripts}</span>
+    &lt;/body&gt;
+    &lt;/html&gt;
+  """</span>
 
 module.exports = template</code></pre>
 </div>
@@ -61,8 +66,7 @@ module.exports = template</code></pre>
     </ul>
   </div>
   <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script><script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script><script>
   (function() {
   var ErrorReporter, bindUpdates, createEditor, exec, findInteractiveElements, readShebang, runners;
 
@@ -183,23 +187,19 @@ module.exports = template</code></pre>
     }, 0);
   };
 
-  Interactive.register("setup", function(params) {
-    params.code = CoffeeScript.compile(params.source);
-    return exec(params);
-  });
-
-  Interactive.register("setup-js", function(params) {
-    params.code = params.source;
-    return exec(params);
-  });
-
   $(function() {
-    return findInteractiveElements();
+    Interactive.register("setup", function(params) {
+      params.code = CoffeeScript.compile(params.source);
+      return exec(params);
+    });
+    return Interactive.register("setup-js", function(params) {
+      params.code = params.source;
+      return exec(params);
+    });
   });
 
 }).call(this);
 
-//# sourceURL=interactive.coffee
 </script><script src="package.js"></script>
 </body>
 </html>
