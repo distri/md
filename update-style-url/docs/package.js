@@ -210,7 +210,7 @@
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "version: \"0.4.3-pre.2\"\ndependencies:\n  require: \"distri/require:master\"\n  interactive: \"distri/interactive:v0.8.3\"\n",
+      "content": "version: \"0.4.3-pre.2\"\ndependencies:\n  require: \"distri/require:v0.5.2\"\n  interactive: \"distri/interactive:v0.8.3\"\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -234,7 +234,7 @@
     },
     "test/template.coffee": {
       "path": "test/template.coffee",
-      "content": "template = require \"../template\"\n\ndescribe \"template\", ->\n  it \"should exist\", ->\n    assert template\n\n  it \"should render html when given a title and sections\", ->\n    result = template\n      scripts: \"\"\n      title: \"Test\"\n      sections: [{\n        docsHtml: \"<h1>Hello</h1>\"\n        codeHtml: \"<pre>1 + 1 == 2</pre>\"\n      }, {\n        docsHtml: \"<h2>Yolo</h2>\"\n        codeHtml: \"world\"\n      }]\n\n    console.log result\n    assert result\n",
+      "content": "template = require \"../template\"\n\ndescribe \"template\", ->\n  it \"should exist\", ->\n    assert template\n\n  it \"should render html when given a title and sections\", ->\n    result = template\n      scripts: \"\"\n      title: \"Test\"\n      sections: [{\n        docsHtml: \"<h1>Hello</h1>\"\n        codeHtml: \"<pre>1 + 1 == 2</pre>\"\n      }, {\n        docsHtml: \"<h2>Yolo</h2>\"\n        codeHtml: \"world\"\n      }]\n\n    assert result\n",
       "mode": "100644",
       "type": "blob"
     }
@@ -267,7 +267,7 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.4.3-pre.2\",\"dependencies\":{\"require\":\"distri/require:master\",\"interactive\":\"distri/interactive:v0.8.3\"}};",
+      "content": "module.exports = {\"version\":\"0.4.3-pre.2\",\"dependencies\":{\"require\":\"distri/require:v0.5.2\",\"interactive\":\"distri/interactive:v0.8.3\"}};",
       "type": "blob"
     },
     "template": {
@@ -287,7 +287,7 @@
     },
     "test/template": {
       "path": "test/template",
-      "content": "(function() {\n  var template;\n\n  template = require(\"../template\");\n\n  describe(\"template\", function() {\n    it(\"should exist\", function() {\n      return assert(template);\n    });\n    return it(\"should render html when given a title and sections\", function() {\n      var result;\n      result = template({\n        scripts: \"\",\n        title: \"Test\",\n        sections: [\n          {\n            docsHtml: \"<h1>Hello</h1>\",\n            codeHtml: \"<pre>1 + 1 == 2</pre>\"\n          }, {\n            docsHtml: \"<h2>Yolo</h2>\",\n            codeHtml: \"world\"\n          }\n        ]\n      });\n      console.log(result);\n      return assert(result);\n    });\n  });\n\n}).call(this);\n",
+      "content": "(function() {\n  var template;\n\n  template = require(\"../template\");\n\n  describe(\"template\", function() {\n    it(\"should exist\", function() {\n      return assert(template);\n    });\n    return it(\"should render html when given a title and sections\", function() {\n      var result;\n      result = template({\n        scripts: \"\",\n        title: \"Test\",\n        sections: [\n          {\n            docsHtml: \"<h1>Hello</h1>\",\n            codeHtml: \"<pre>1 + 1 == 2</pre>\"\n          }, {\n            docsHtml: \"<h2>Yolo</h2>\",\n            codeHtml: \"world\"\n          }\n        ]\n      });\n      return assert(result);\n    });\n  });\n\n}).call(this);\n",
       "type": "blob"
     }
   },
@@ -418,7 +418,7 @@
       "version": "0.5.2",
       "entryPoint": "main",
       "repository": {
-        "branch": "master",
+        "branch": "v0.5.2",
         "default_branch": "master",
         "full_name": "distri/require",
         "homepage": null,
